@@ -50,6 +50,15 @@ export class UsersController {
 
   @Get('by-id/:id')
   async getById(@Param('id') id: number) {
-    return await this.service.getById(id);
+    return {
+      data: await this.service.getById(id),
+    };
+  }
+
+  @Get('all')
+  async getAll() {
+    return {
+      data: await this.service.getAllUsers(),
+    };
   }
 }

@@ -27,7 +27,9 @@ export class AuthService {
         where: [{ userName: payload.user }, { email: payload.user }],
         select: { password: true, status: true, id: true },
         relations: {
-          roleUsers: true,
+          roleUsers: {
+            role: true,
+          },
         },
       })
       .catch(() => {
@@ -63,7 +65,7 @@ export class AuthService {
           secret: this.config.get<string>('environment.jwtSecret'),
         },
       ),
-      role: user.roleUsers,
+      role: user.roleUsers.map((role) => role.role.name),
     };
   }
 }

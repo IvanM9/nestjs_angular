@@ -1,0 +1,87 @@
+<mat-card class="cardWithShadow">
+    <mat-card-header class="p-t-24 justify-content-between">
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <mat-card-title>Usuarios</mat-card-title>
+        </div>
+        <mat-form-field >
+            <input matInput placeholder="Buscar" [(ngModel)]="searchValue">
+        </mat-form-field>
+        <div class="d-flex align-items-center">
+            <button mat-raised-button (click)="addData()" class="button">
+              Añadir usuario
+            </button>
+            <button mat-raised-button (click)="addData()" class="button">
+                Importar desde Excel
+              </button>
+          </div>
+    </mat-card-header>
+    <mat-card-content class="p-t-0">
+        <div class="table-responsive">
+            <table mat-table [dataSource]="dataSource" class="w-100">
+                <ng-container matColumnDef="position">
+                    <th mat-header-cell *matHeaderCellDef> No. </th>
+                    <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                  </ng-container>
+                <ng-container matColumnDef="firstName">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                        Nombres
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="mat-body-1">
+                        <span class=" f-s-14">{{ element.firstName }}</span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="lastName">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                        Apellidos
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="mat-body-1">
+                        <span class=" f-s-14">{{ element.lastName }}</span>
+                    </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="logged">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                        Estado de sesión
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <span class="f-s-14">{{ element.logged }}</span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                        Estado de usuario
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <span class="f-s-14">{{ element.logged }}</span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                        Acciones
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-raised-button (click)="editData(element)" class="button">
+                            Editar
+                        </button>
+                        <button mat-raised-button (click)="deleteData(element)" class="button">
+                            Eliminar
+                        </button>
+                    </td>
+                </ng-container>
+
+                <!-- Weight Column -->
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                 showFirstLastButtons
+                 aria-label="Select page of periodic elements">
+  </mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>

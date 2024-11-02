@@ -11,6 +11,7 @@ import { User } from '../../domain/entities/user.entity';
 import { hashSync } from 'bcrypt';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { UserRolesService } from '../../domain/services/user-roles.service';
+import { Session } from 'src/modules/auth/domain/entities/session.entity';
 
 @Injectable()
 export class UsersService {
@@ -125,5 +126,47 @@ export class UsersService {
     }
 
     return existUser;
+  }
+
+  async getAllUsers() {
+    const users = await this.cnx.find(User, {
+      relations: {
+        person: true,
+      },
+    });
+
+    const allUsers = [];
+    for (const user of users) {
+      const lastSession = await this.cnx.findOne(Session, {
+        where: {
+          userId: user.id,
+        },
+        order: {
+          firstDate: 'DESC',
+        },
+        select: {
+          logged: true,
+          firstDate: true,
+          lastDate: true,
+        },
+      });
+
+      const logged =
+        lastSession?.logged && !lastSession?.lastDate ? 'Sí' : 'No';
+
+      allUsers.push({
+        id: user.id,
+        userName: user.userName,
+        email: user.email,
+        firstName: user.person.firstName,
+        lastName: user.person.lastName,
+        identification: user.person.identification,
+        birthDate: user.person.birthDate,
+        status: user.status,
+        logged,
+      });
+    }
+
+    return allUsers;
   }
 }

@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MaterialModule } from '../../material.module';
 import { AppProfitExpensesComponent } from 'src/app/components/profit-expenses/profit-expenses.component';
 import { AppTrafficDistributionComponent } from 'src/app/components/traffic-distribution/traffic-distribution.component';
@@ -7,6 +7,7 @@ import { AppUpcomingSchedulesComponent } from 'src/app/components/upcoming-sched
 import { AppTopEmployeesComponent } from 'src/app/components/top-employees/top-employees.component';
 import { AppBlogComponent } from 'src/app/components/apps-blog/apps-blog.component';
 import { LastSessionsComponent } from "../../components/last-sessions/last-sessions.component";
+import { UsersLastSessionsComponent } from "../../components/users-last-sessions/users-last-sessions.component";
 
 
 
@@ -22,9 +23,14 @@ import { LastSessionsComponent } from "../../components/last-sessions/last-sessi
     AppTopEmployeesComponent,
     AppBlogComponent,
     LastSessionsComponent,
-    
+    UsersLastSessionsComponent
 ],
   templateUrl: './starter.component.html',
   encapsulation: ViewEncapsulation.None,
 })
-export class StarterComponent { }
+export class StarterComponent{
+  constructor() { }
+
+  roles = JSON.parse(localStorage.getItem('role') || '[]');
+
+}

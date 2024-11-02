@@ -10,7 +10,28 @@ export class RolesService {
   constructor(
     @InjectEntityManager() private cnx: EntityManager,
     private roleOptions: RoleOptionsService,
-  ) {}
+  ) {
+    this.createAdminRole();
+  }
+
+  private async createAdminRole() {
+    const role = await this.cnx.findOne(Role, {
+      where: {
+        name: 'admin',
+      },
+    });
+
+    if (!role) {
+      await this.cnx
+        .save(Role, {
+          name: 'admin',
+          status: true,
+        })
+        .catch(() => {
+          throw new BadRequestException('Error al crear el rol');
+        });
+    }
+  }
 
   async create(data: CreateRoleDto) {
     const existRole = await this.cnx.findOne(Role, {

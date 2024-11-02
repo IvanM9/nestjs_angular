@@ -48,7 +48,9 @@ export class AppSideLoginComponent {
       'password': this.form.value.password!
       }
     }).subscribe((res:any) => {
-      localStorage.setItem('token', res.data.token);
+      const data: {token: string, role: string[]} = res.data;
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('role', JSON.stringify(data.role));
       alert('Inicio de sesión exitoso');
       this.router.navigate(['/dashboard']);
     }, (err) => {
