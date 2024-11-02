@@ -24,7 +24,7 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ default: true })
   status: boolean;
 
   @Column({ name: 'person_id' })
