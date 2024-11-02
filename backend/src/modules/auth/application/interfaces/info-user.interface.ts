@@ -2,6 +2,6 @@ import { RoleEnum } from '../enums/role.enum';
 
 export interface InfoUserInterface {
   id: string;
-  user: string;
+  sessionId: number;
   role: RoleEnum;
 }

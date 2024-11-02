@@ -15,8 +15,15 @@ export class Session {
   @Column({ name: 'first_date', type: 'timestamp with time zone' })
   firstDate: Date;
 
-  @Column({ name: 'last_date', type: 'timestamp with time zone' })
+  @Column({
+    name: 'last_date',
+    type: 'timestamp with time zone',
+    nullable: true,
+  })
   lastDate: Date;
+
+  @Column()
+  logged: boolean;
 
   @Column({ name: 'user_id' })
   userId: number;

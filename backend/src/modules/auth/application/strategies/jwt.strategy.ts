@@ -10,10 +10,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: config.get<string>('jwtSecret'),
+      secretOrKey: config.get<string>('environment.jwtSecret'),
     });
   }
   async validate(payload: InfoUserInterface) {
-    return { id: payload.id, user: payload.user, role: payload.role };
+    return { id: payload.id, sessionId: payload.sessionId, role: payload.role };
   }
 }
