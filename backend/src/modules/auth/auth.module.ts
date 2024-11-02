@@ -11,6 +11,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
 import { AuthController } from './infrastructure/controllers/auth.controller';
+import { RolesService } from './domain/use-cases/roles.service';
+import { RolesController } from './infrastructure/controllers/roles.controller';
 
 @Module({
   imports: [
@@ -31,7 +33,7 @@ import { AuthController } from './infrastructure/controllers/auth.controller';
       inject: [ConfigService],
     }),
   ],
-  providers: [AuthService],
-  controllers: [AuthController],
+  providers: [AuthService, RolesService],
+  controllers: [AuthController, RolesController],
 })
 export class AuthModule {}

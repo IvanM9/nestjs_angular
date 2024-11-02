@@ -10,6 +10,9 @@ export class Role {
   @Column()
   name: string;
 
+  @Column()
+  status: boolean;
+
   @OneToMany(() => RoleOptions, (roleOptions) => roleOptions.role)
   roleOptions: RoleOptions[];
 
