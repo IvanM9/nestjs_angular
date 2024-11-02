@@ -1,11 +1,17 @@
-import { Body, Controller, Get, Param, Patch, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseBoolPipe,
+  Patch,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { UsersService } from '../../application/use-cases/users.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from '../../application/dtos/create-user.dto';
-import {
-  updateStatusDto,
-  UpdateUserDto,
-} from '../../application/dtos/update-user.dto';
+import { UpdateUserDto } from '../../application/dtos/update-user.dto';
 
 @Controller('users')
 @ApiTags('users')
@@ -30,10 +36,10 @@ export class UsersController {
     };
   }
 
-  @Patch('update-status/:id')
+  @Patch('update-status/:id/:status')
   async updateStatus(
     @Param('id') id: number,
-    @Body() { status }: updateStatusDto,
+    @Param('status', ParseBoolPipe) status: boolean,
   ) {
     await this.service.updateStatus(id, status);
 

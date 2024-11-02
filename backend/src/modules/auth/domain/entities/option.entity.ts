@@ -9,6 +9,9 @@ export class Option {
   @Column()
   name: string;
 
+  @Column({ default: true })
+  status: boolean;
+
   @OneToMany(() => RoleOptions, (roleOptions) => roleOptions.option)
   roleOptions: RoleOptions[];
 }

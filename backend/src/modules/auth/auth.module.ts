@@ -16,6 +16,9 @@ import { RolesController } from './infrastructure/controllers/roles.controller';
 import { SessionsService } from './application/use-cases/sessions.service';
 import { UsersModule } from '../users/users.module';
 import { JwtStrategy } from './application/strategies/jwt.strategy';
+import { OptionsService } from './application/use-cases/options.service';
+import { RoleOptionsService } from './domain/services/role_options.service';
+import { OptionsController } from './infrastructure/controllers/options.controller';
 
 @Module({
   imports: [
@@ -37,8 +40,15 @@ import { JwtStrategy } from './application/strategies/jwt.strategy';
     }),
     UsersModule,
   ],
-  providers: [AuthService, RolesService, SessionsService, JwtStrategy],
-  controllers: [AuthController, RolesController],
+  providers: [
+    AuthService,
+    RolesService,
+    SessionsService,
+    JwtStrategy,
+    OptionsService,
+    RoleOptionsService,
+  ],
+  controllers: [AuthController, RolesController, OptionsController],
   exports: [RolesService],
 })
 export class AuthModule {}
