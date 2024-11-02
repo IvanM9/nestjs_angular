@@ -5,12 +5,12 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthService } from '../../domain/use-cases/auth.service';
+import { AuthService } from '../../application/use-cases/auth.service';
 import { LoginDto } from '../../application/dtos/LoginDto';
 import { JwtAuthGuard } from '../../application/guards/jwt-auth.guard';
 import { CurrentUser } from '../../application/decorators/auth.decorator';
 import { InfoUserInterface } from '../../application/interfaces/info-user.interface';
-import { SessionsService } from '../../domain/use-cases/sessions.service';
+import { SessionsService } from '../../application/use-cases/sessions.service';
 
 @Controller('auth')
 @ApiTags('auth')

@@ -6,7 +6,7 @@ export class CreateRoleDto {
   @IsString()
   name: string;
 
-  @ApiProperty()
-  @IsString()
-  description: string;
+  // @ApiProperty()
+  // @IsString()
+  // description: string;
 }

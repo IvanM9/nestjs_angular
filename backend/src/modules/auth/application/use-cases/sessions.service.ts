@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { EntityManager, IsNull, MoreThan } from 'typeorm';
-import { Session } from '../entities/session.entity';
-import { UsersService } from 'src/modules/users/domain/use-cases/users.service';
+import { Session } from '../../domain/entities/session.entity';
+import { UsersService } from 'src/modules/users/application/use-cases/users.service';
 
 @Injectable()
 export class SessionsService {

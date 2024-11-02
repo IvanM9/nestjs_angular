@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { EntityManager } from 'typeorm';
-import { CreateRoleDto } from '../../application/dtos/create-role.dto';
-import { Role } from '../entities/role.entity';
+import { CreateRoleDto } from '../dtos/create-role.dto';
+import { Role } from '../../domain/entities/role.entity';
 
 @Injectable()
 export class RolesService {
@@ -35,7 +35,9 @@ export class RolesService {
       throw new BadRequestException('Role not found');
     }
 
-    return await this.cnx.update(Role, id, data).catch((error) => {
+    role.name = data.name;
+
+    return await this.cnx.save(Role, role).catch((error) => {
       throw new BadRequestException(error.message);
     });
   }

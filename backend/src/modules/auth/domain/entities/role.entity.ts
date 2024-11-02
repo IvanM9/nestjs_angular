@@ -10,7 +10,7 @@ export class Role {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ default: true })
   status: boolean;
 
   @OneToMany(() => RoleOptions, (roleOptions) => roleOptions.role)

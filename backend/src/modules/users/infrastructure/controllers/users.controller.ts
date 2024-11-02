@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Patch, Post, Put } from '@nestjs/common';
-import { UsersService } from '../../domain/use-cases/users.service';
+import { UsersService } from '../../application/use-cases/users.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from '../../application/dtos/create-user.dto';
 import {

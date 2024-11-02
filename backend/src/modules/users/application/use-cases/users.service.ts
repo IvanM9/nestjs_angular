@@ -5,30 +5,37 @@ import {
 } from '@nestjs/common';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { EntityManager } from 'typeorm';
-import { CreateUserDto } from '../../application/dtos/create-user.dto';
-import { Person } from '../entities/person.entity';
-import { User } from '../entities/user.entity';
+import { CreateUserDto } from '../dtos/create-user.dto';
+import { Person } from '../../domain/entities/person.entity';
+import { User } from '../../domain/entities/user.entity';
 import { hashSync } from 'bcrypt';
-import { UpdateUserDto } from '../../application/dtos/update-user.dto';
+import { UpdateUserDto } from '../dtos/update-user.dto';
+import { UserRolesService } from '../../domain/services/user-roles.service';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectEntityManager() private cnx: EntityManager) {}
+  constructor(
+    @InjectEntityManager() private cnx: EntityManager,
+    private userRolesService: UserRolesService,
+  ) {}
 
   async create(data: CreateUserDto) {
     return await this.cnx.transaction(async (manager) => {
       const existUser = await manager.findOne(User, {
-        where: {
-          email: data.email,
-          userName: data.userName,
-          person: {
-            identification: data.identification,
+        where: [
+          {
+            userName: data.userName,
           },
-        },
+          {
+            person: {
+              identification: data.identification,
+            },
+          },
+        ],
       });
 
       if (existUser) {
-        throw new BadRequestException('User already exists');
+        throw new BadRequestException('El usuario ya existe');
       }
 
       const newPerson = {
@@ -40,16 +47,26 @@ export class UsersService {
 
       const createdPerson = await manager.save(Person, newPerson);
 
+      const randomNum = Math.floor(Math.random() * 1000);
+      const initials = `${data.firstName.charAt(0).toLowerCase()}${data.lastName.toLowerCase()}`;
+      const email = `${initials}${randomNum}@example.com`;
+
       const newUser = {
         userName: data.userName,
-        email: data.email,
         password: await hashSync(data.password, 10),
         personId: createdPerson.id,
+        email,
       };
 
-      return await manager.save(User, newUser).catch((error) => {
+      const createdUser = await manager.save(User, newUser).catch((error) => {
         throw new BadRequestException(error.message);
       });
+
+      for (const roleId of data.rolesId) {
+        await this.userRolesService.assignRole(createdUser.id, roleId, manager);
+      }
+
+      return createdUser;
     });
   }
 

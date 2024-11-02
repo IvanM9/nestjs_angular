@@ -7,7 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcrypt';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { EntityManager } from 'typeorm';
-import { LoginDto } from '../../application/dtos/LoginDto';
+import { LoginDto } from '../dtos/LoginDto';
 import { User } from 'src/modules/users/domain/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
 import { SessionsService } from './sessions.service';
