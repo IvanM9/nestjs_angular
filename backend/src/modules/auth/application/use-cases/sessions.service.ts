@@ -7,6 +7,7 @@ import { InjectEntityManager } from '@nestjs/typeorm';
 import { EntityManager, IsNull, MoreThan } from 'typeorm';
 import { Session } from '../../domain/entities/session.entity';
 import { UsersService } from 'src/modules/users/application/use-cases/users.service';
+import * as moment from 'moment-timezone';
 
 @Injectable()
 export class SessionsService {
@@ -68,5 +69,33 @@ export class SessionsService {
     session.lastDate = new Date();
 
     return this.cnx.save(session);
+  }
+
+  async getLatestSession(sessionId: number) {
+    const currentSession = await this.cnx.findOne(Session, {
+      where: { id: sessionId },
+      select: ['userId'],
+    });
+
+    const sessions = await this.cnx.find(Session, {
+      where: { userId: currentSession.userId },
+      order: { firstDate: 'DESC' },
+      take: 10,
+    });
+
+    return sessions.map((session) => ({
+      id: session.id,
+      firstDate: moment(session.firstDate)
+        .locale('es')
+        .tz('America/Guayaquil')
+        .format('dddd, MMMM D YYYY, h:mm a'),
+      lastDate: session.lastDate
+        ? moment(session.lastDate)
+            .locale('es')
+            .tz('America/Guayaquil')
+            .format('dddd, MMMM D YYYY, h:mm a')
+        : null,
+      logged: session.logged,
+    }));
   }
 }

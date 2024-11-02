@@ -1,4 +1,4 @@
-import { Controller, Headers, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, Headers, Post, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiHeader,
@@ -36,5 +36,14 @@ export class AuthController {
   async logout(@CurrentUser() { sessionId }: InfoUserInterface) {
     await this.sessionService.closeSession(sessionId);
     return { message: 'Sesión cerrada' };
+  }
+
+  @Get('last-sessions')
+  @ApiOperation({ summary: 'Get last sessions' })
+  @UseGuards(JwtAuthGuard)
+  async lastSessions(@CurrentUser() { sessionId }: InfoUserInterface) {
+    return {
+      data: await this.sessionService.getLatestSession(sessionId),
+    };
   }
 }
