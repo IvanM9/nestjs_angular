@@ -88,12 +88,12 @@ export class SessionsService {
       firstDate: moment(session.firstDate)
         .locale('es')
         .tz('America/Guayaquil')
-        .format('dddd, MMMM D YYYY, h:mm a'),
+        .format('dddd, MMMM D, YYYY, h:mm a'),
       lastDate: session.lastDate
         ? moment(session.lastDate)
             .locale('es')
             .tz('America/Guayaquil')
-            .format('dddd, MMMM D YYYY, h:mm a')
+            .format('dddd, MMMM D, YYYY, h:mm a')
         : null,
       logged: session.logged,
     }));

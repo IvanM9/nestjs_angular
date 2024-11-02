@@ -1,0 +1,45 @@
+<mat-card class="cardWithShadow">
+    <mat-card-header class="p-t-24">
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <mat-card-title>Últimos 10 inicio de sesiones</mat-card-title>
+        </div>
+    </mat-card-header>
+    <mat-card-content class="p-t-0">
+        <div class="table-responsive">
+            <table mat-table [dataSource]="dataSource" class="w-100">
+                <ng-container matColumnDef="firstDate">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                        Fecha de inicio
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="mat-body-1">
+                        <span class=" f-s-14">{{ element.firstDate }}</span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="lastDate">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                        Fecha de fin
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="mat-body-1">
+                        <span class=" f-s-14">{{ element.lastDate }}</span>
+                    </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="logged">
+                    <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
+                        ¿Inició sesión correctamente?
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <span class="f-s-14">{{ element.logged }}</span>
+                    </td>
+                </ng-container>
+
+                <!-- Weight Column -->
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+        </div>
+    </mat-card-content>
+</mat-card>

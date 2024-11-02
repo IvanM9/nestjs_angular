@@ -6,6 +6,7 @@ import { AppProductSalesComponent } from 'src/app/components/product-sales/produ
 import { AppUpcomingSchedulesComponent } from 'src/app/components/upcoming-schedules/upcoming-schedules.component';
 import { AppTopEmployeesComponent } from 'src/app/components/top-employees/top-employees.component';
 import { AppBlogComponent } from 'src/app/components/apps-blog/apps-blog.component';
+import { LastSessionsComponent } from "../../components/last-sessions/last-sessions.component";
 
 
 
@@ -19,8 +20,10 @@ import { AppBlogComponent } from 'src/app/components/apps-blog/apps-blog.compone
     AppProductSalesComponent,
     AppUpcomingSchedulesComponent,
     AppTopEmployeesComponent,
-    AppBlogComponent
-  ],
+    AppBlogComponent,
+    LastSessionsComponent,
+    
+],
   templateUrl: './starter.component.html',
   encapsulation: ViewEncapsulation.None,
 })
