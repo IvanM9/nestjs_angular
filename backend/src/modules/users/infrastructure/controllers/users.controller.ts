@@ -7,11 +7,12 @@ import {
   Patch,
   Post,
   Put,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from '../../application/use-cases/users.service';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from '../../application/dtos/create-user.dto';
 import { UpdateUserDto } from '../../application/dtos/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -60,9 +61,25 @@ export class UsersController {
   }
 
   @Get('all')
-  async getAll() {
+  @ApiQuery({
+    name: 'search',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'items',
+    required: false,
+  })
+  async getAll(
+    @Query('search') search: string,
+    @Query('page') page: number,
+    @Query('items') items: number,
+  ) {
     return {
-      data: await this.service.getAllUsers(),
+      data: await this.service.getAllUsers(search, page, items),
     };
   }
 

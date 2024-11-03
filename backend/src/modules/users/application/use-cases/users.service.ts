@@ -13,12 +13,14 @@ import { UpdateUserDto } from '../dtos/update-user.dto';
 import { UserRolesService } from '../../domain/services/user-roles.service';
 import { Session } from 'src/modules/auth/domain/entities/session.entity';
 import * as XLSX from 'xlsx';
+import { UsersRepository } from '../../infrastructure/persistence/users.repository';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectEntityManager() private cnx: EntityManager,
     private userRolesService: UserRolesService,
+    private userRepository: UsersRepository,
   ) {}
 
   async create(data: CreateUserDto) {
@@ -135,15 +137,16 @@ export class UsersService {
     return existUser;
   }
 
-  async getAllUsers() {
-    const users = await this.cnx.find(User, {
-      relations: {
-        person: true,
-      },
-    });
+  async getAllUsers(search: string, page: number, items: number) {
+    const users = await this.userRepository.getAllUsers(
+      this.cnx,
+      search,
+      page,
+      items,
+    );
 
     const allUsers = [];
-    for (const user of users) {
+    for (const user of users.users) {
       const lastSession = await this.cnx.findOne(Session, {
         where: {
           userId: user.id,
@@ -165,16 +168,19 @@ export class UsersService {
         id: user.id,
         userName: user.userName,
         email: user.email,
-        firstName: user.person.firstName,
-        lastName: user.person.lastName,
-        identification: user.person.identification,
-        birthDate: user.person.birthDate,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        identification: user.identification,
+        birthDate: user.birthDate,
         status: user.status,
         logged,
       });
     }
 
-    return allUsers;
+    return {
+      total: users.total,
+      users: allUsers,
+    };
   }
 
   async importFromExcel(file: Express.Multer.File) {

@@ -48,7 +48,9 @@ export class UsersLastSessionsComponent implements OnInit {
     this.api.get('http://localhost:3000/users/all', {
       headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
     }).subscribe((res: any) => {
+      let index= 1;
       this.dataSource = res.data.map((session: any) => ({
+        position: index++,
         logged: session.logged,
         firstName: session.firstName,
         lastName: session.lastName,

@@ -18,7 +18,9 @@ export class CreateUserDto {
   // email: string;
 
   @ApiProperty()
-  @Length(8, 20)
+  @Length(8, 20, {
+    message: 'El nombre de usuario debe tener entre 8 y 20 caracteres',
+  })
   @IsString()
   @Matches(/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]*$/, {
     message:
