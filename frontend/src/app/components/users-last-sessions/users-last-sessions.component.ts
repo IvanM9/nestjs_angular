@@ -18,7 +18,7 @@ import { UpdateUserDialogComponent } from '../update-user-dialog/update-user-dia
 })
 export class UsersLastSessionsComponent implements OnInit {
   readonly dialog = inject(MatDialog);
-  
+
   constructor(private api: HttpClient) { }
   async ngOnInit(): Promise<void> {
     await this.getUsers();
@@ -32,7 +32,7 @@ export class UsersLastSessionsComponent implements OnInit {
   pageSize = 5;
 
   addData() {
-    const dialogRef = this.dialog.open(UserDialogComponent,{
+    const dialogRef = this.dialog.open(UserDialogComponent, {
       width: '600px',
     });
 
@@ -47,7 +47,7 @@ export class UsersLastSessionsComponent implements OnInit {
       headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
       params: { search: this.searchValue, page: this.currentPage.toString(), items: this.pageSize.toString() }
     }).subscribe((res: any) => {
-      let index= 1;
+      let index = 1;
       this.dataSource = res.data.users.map((user: any) => ({
         position: index++,
         logged: user.logged,
@@ -61,13 +61,19 @@ export class UsersLastSessionsComponent implements OnInit {
     });
   }
 
-  deleteData(_t92: any) {
-    throw new Error('Method not implemented.');
+  deleteData(element: any) {
+    this.api.patch(`http://localhost:3000/users/update-status/${element.id}/false`, null, {
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    }).subscribe(async (res: any) => {
+      await this.getUsers()
+    }, (error) => {
+      alert('Error al eliminar el usuario');
+    });
   }
 
   editData(element: any) {
     const dialog = this.dialog.open(UpdateUserDialogComponent, {
-      data: {userId: element.id},
+      data: { userId: element.id },
       width: '600px',
     });
 
