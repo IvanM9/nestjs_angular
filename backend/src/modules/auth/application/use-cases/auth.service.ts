@@ -61,7 +61,7 @@ export class AuthService {
           role: user.roleUsers,
         },
         {
-          expiresIn: '12h',
+          // expiresIn: '12h',
           secret: this.config.get<string>('environment.jwtSecret'),
         },
       ),

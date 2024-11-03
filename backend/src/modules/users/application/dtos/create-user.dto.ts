@@ -5,6 +5,7 @@ import {
   IsNumber,
   // IsEmail,
   IsNumberString,
+  IsOptional,
   IsString,
   IsStrongPassword,
   Length,
@@ -67,5 +68,6 @@ export class CreateUserDto {
   @ApiProperty({ type: [Number] })
   @IsArray()
   @IsNumber({}, { each: true })
+  @IsOptional()
   rolesId: number[];
 }

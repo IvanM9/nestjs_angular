@@ -7,11 +7,15 @@ import {
   Patch,
   Post,
   Put,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from '../../application/use-cases/users.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from '../../application/dtos/create-user.dto';
 import { UpdateUserDto } from '../../application/dtos/update-user.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ImportFromExcelDto } from '../../application/dtos/import-from-excel.dto';
 
 @Controller('users')
 @ApiTags('users')
@@ -59,6 +63,20 @@ export class UsersController {
   async getAll() {
     return {
       data: await this.service.getAllUsers(),
+    };
+  }
+
+  @Post('import-from-excel')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    type: ImportFromExcelDto,
+  })
+  async importFromExcel(@UploadedFile() file: Express.Multer.File) {
+    await this.service.importFromExcel(file);
+
+    return {
+      message: 'Users imported successfully',
     };
   }
 }

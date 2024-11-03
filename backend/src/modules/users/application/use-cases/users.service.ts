@@ -12,6 +12,7 @@ import { hashSync } from 'bcrypt';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { UserRolesService } from '../../domain/services/user-roles.service';
 import { Session } from 'src/modules/auth/domain/entities/session.entity';
+import * as XLSX from 'xlsx';
 
 @Injectable()
 export class UsersService {
@@ -63,8 +64,14 @@ export class UsersService {
         throw new BadRequestException(error.message);
       });
 
-      for (const roleId of data.rolesId) {
-        await this.userRolesService.assignRole(createdUser.id, roleId, manager);
+      if (data.rolesId) {
+        for (const roleId of data.rolesId) {
+          await this.userRolesService.assignRole(
+            createdUser.id,
+            roleId,
+            manager,
+          );
+        }
       }
 
       return createdUser;
@@ -168,5 +175,61 @@ export class UsersService {
     }
 
     return allUsers;
+  }
+
+  async importFromExcel(file: Express.Multer.File) {
+    const validKeys = [
+      'Nombres',
+      'Apellidos',
+      'Identificación',
+      'Fecha de nacimiento',
+      'Usuario',
+      'Contraseña',
+    ];
+
+    try {
+      const workbook = XLSX.read(file.buffer, { type: 'buffer' });
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+      // Validar que el archivo tenga la estructura correcta
+      const keys = Object.keys(jsonData[0]);
+
+      const isValid = keys.every((key) => {
+        const validated = validKeys.includes(key);
+
+        if (!validated) {
+          throw new BadRequestException(
+            `La columna ${key} no es válida. Debe ser una de las siguientes: ${validKeys.join(', ')}`,
+          );
+        }
+
+        return validated;
+      });
+
+      if (!isValid) {
+        throw new BadRequestException(
+          'El archivo no tiene la estructura correcta',
+        );
+      }
+
+      for (const student of jsonData) {
+        const data: CreateUserDto = {
+          firstName: student['Nombres'],
+          lastName: student['Apellidos'],
+          identification: `${student['Identificación']}`,
+          birthDate: new Date(student['Fecha de nacimiento']),
+          userName: student['Usuario'],
+          password: student['Contraseña'],
+          rolesId: [],
+        };
+
+        await this.create(data);
+      }
+
+      return { message: 'Usuarios creados correctamente' };
+    } catch {
+      throw new BadRequestException('Error al importar usuarios');
+    }
   }
 }
