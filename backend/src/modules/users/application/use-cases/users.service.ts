@@ -128,13 +128,23 @@ export class UsersService {
       where: {
         id,
       },
+      relations: { person: true },
     });
 
     if (!existUser) {
       throw new NotFoundException('User not found');
     }
 
-    return existUser;
+    return {
+      id: existUser.id,
+      userName: existUser.userName,
+      email: existUser.email,
+      firstName: existUser.person.firstName,
+      lastName: existUser.person.lastName,
+      identification: existUser.person.identification,
+      birthDate: existUser.person.birthDate,
+      status: existUser.status,
+    };
   }
 
   async getAllUsers(search: string, page: number, items: number) {

@@ -12,7 +12,13 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from '../../application/use-cases/users.service';
-import { ApiBody, ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreateUserDto } from '../../application/dtos/create-user.dto';
 import { UpdateUserDto } from '../../application/dtos/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -42,6 +48,10 @@ export class UsersController {
   }
 
   @Patch('update-status/:id/:status')
+  @ApiOperation({
+    summary: 'Actuliza el estado de un usuario',
+    description: 'Activa o desactiva un usuario',
+  })
   async updateStatus(
     @Param('id') id: number,
     @Param('status', ParseBoolPipe) status: boolean,

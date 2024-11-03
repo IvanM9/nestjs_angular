@@ -1,0 +1,90 @@
+<mat-dialog-actions>
+  <button mat-button color="red" (click)="onNoClick()">Cerrar</button>
+</mat-dialog-actions>
+<mat-dialog-content>
+<form class="m-t-30" [formGroup]="form" (ngSubmit)="submit()">
+  <!-- Nombre -->
+  <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Nombre</mat-label>
+  <mat-form-field appearance="outline" class="w-100" color="primary">
+    <input matInput formControlName="firstName" />
+    @if(f.firstName.touched && f.firstName.invalid) {
+    <mat-hint class="m-b-16 error-msg">
+      @if(f.firstName.errors &&
+      f.firstName.errors['required']) {
+      <div class="text-error">Nombre es requerido.</div>
+        }
+    </mat-hint>
+    }
+  </mat-form-field>
+
+  <!-- Apellido -->
+
+  <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Apellido</mat-label>
+  <mat-form-field appearance="outline" class="w-100" color="primary">
+    <input matInput formControlName="lastName" />
+    @if(f.lastName.touched && f.lastName.invalid) {
+    <mat-hint class="m-b-16 error-msg">
+      @if(f.lastName.errors &&
+      f.lastName.errors['required']) {
+      <div class="text-error">Apellido es requerido.</div>
+      }
+    </mat-hint>
+    }
+  </mat-form-field>
+
+  <!-- identificación -->
+  <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Identificación</mat-label>
+  <mat-form-field appearance="outline" class="w-100" color="primary">
+    <input matInput formControlName="identification" />
+    @if(f.identification.touched && f.identification.invalid) {
+    <mat-hint class="m-b-16 error-msg">
+      @if(f.identification.errors &&
+      f.identification.errors['required']) {
+      <div class="text-error ">Identificación es requerida.</div>
+      }
+    </mat-hint>
+    }
+  </mat-form-field>
+
+  <!-- Fecha de nacimiento -->
+  <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Fecha de nacimiento</mat-label>
+  <mat-form-field appearance="outline" class="w-100" color="primary">
+    <input matInput [matDatepicker]="picker" formControlName="birthDate" />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+    @if(f.birthDate.touched && f.birthDate.invalid) {
+    <mat-hint class="m-b-16 error-msg">
+      @if(f.birthDate.errors &&
+      f.birthDate.errors['required']) {
+      <div class="text-error ">Fecha de nacimiento es requerida.</div>
+      }
+    </mat-hint>
+    }
+  </mat-form-field>
+
+  <!-- Roles -->
+  <!-- <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Roles</mat-label>
+  <mat-form-field appearance="outline" class="w-100" color="primary">
+    <mat-select formControlName="roles" multiple>
+      <mat-option *ngFor="let role of roles" [value]="role.id">
+        {{ role.name }}
+      </mat-option>
+    </mat-select>
+    @if(f.roles.touched && f.roles.invalid) {
+    <mat-hint class="m-b-16 error-msg">
+      @if(f.roles.errors &&
+      f.roles.errors['required']) {
+      <div class="text-error ">Roles es requerido.</div>
+      }
+    </mat-hint>
+    }
+  </mat-form-field> -->
+
+  
+  <button mat-flat-button color="primary" class="w-100" [disabled]="!form.valid">
+    Guardar
+  </button>
+  <!-- input -->
+</form>
+</mat-dialog-content>
+
