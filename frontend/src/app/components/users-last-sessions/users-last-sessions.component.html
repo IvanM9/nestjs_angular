@@ -1,17 +1,21 @@
 <mat-card class="cardWithShadow">
     <mat-card-header class="p-t-24 tw-flex tw-justify-between tw-items-center">
-            <mat-card-title>Usuarios</mat-card-title>
-        <mat-form-field appearance="outline" >
-            <input matInput placeholder="Buscar" [(ngModel)]="searchValue">
-        </mat-form-field>
+        <mat-card-title>Usuarios</mat-card-title>
+        <div class="tw-flex tw-gap-3 tw-items-center">
+            <input placeholder="Buscar" [(ngModel)]="searchValue" size="small"
+                class="tw-w-96 tw-border tw-border-gray-300 tw-rounded-md tw-p-2">
+            <button mat-icon-button (click)="getUsers()">
+                <mat-icon>search</mat-icon>
+            </button>
+        </div>
         <div class="tw-flex tw-gap-3">
             <button mat-flat-button color="primary" (click)="addData()">
-              Añadir usuario
+                Añadir usuario
             </button>
             <button mat-flat-button color="primary" (click)="addData()">
                 Importar desde Excel
-              </button>
-          </div>
+            </button>
+        </div>
     </mat-card-header>
     <mat-card-content class="p-t-0">
         <div class="table-responsive">
@@ -19,7 +23,7 @@
                 <ng-container matColumnDef="position">
                     <th mat-header-cell *matHeaderCellDef> No. </th>
                     <td mat-cell *matCellDef="let element"> {{element.position}} </td>
-                  </ng-container>
+                </ng-container>
                 <ng-container matColumnDef="firstName">
                     <th mat-header-cell *matHeaderCellDef class="f-w-600 mat-subtitle-1 f-s-16">
                         Nombres
@@ -76,10 +80,13 @@
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
             </table>
-            <mat-paginator [pageSizeOptions]="[5, 10, 20]"
-                 showFirstLastButtons
-                 aria-label="Select page of periodic elements">
-  </mat-paginator>
+            <!-- Paginator -->
+            <div class="tw-flex tw-justify-end tw-mt-4">
+                <mat-paginator [length]="totalPages" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 25, 100]"
+                    (page)="currentPage = $event.pageIndex + 1; getUsers()" 
+                    class="tw-mx-auto">
+                </mat-paginator>
+            </div>
         </div>
     </mat-card-content>
 </mat-card>

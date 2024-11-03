@@ -43,19 +43,25 @@ export class UsersLastSessionsComponent implements OnInit {
 
   displayedColumns: string[] = ['position', 'firstName', 'lastName', 'logged', 'status', 'actions'];
   dataSource = [];
+  totalPages = 0;
+  currentPage = 1;
+  pageSize = 5;
 
   async getUsers() {
     this.api.get('http://localhost:3000/users/all', {
-      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+      params: { search: this.searchValue, page: this.currentPage.toString(), items: this.pageSize.toString() }
     }).subscribe((res: any) => {
       let index= 1;
-      this.dataSource = res.data.map((session: any) => ({
+      this.dataSource = res.data.users.map((session: any) => ({
         position: index++,
         logged: session.logged,
         firstName: session.firstName,
         lastName: session.lastName,
         status: session.status ? 'Activo' : 'Inactivo',
       }))
+
+      this.totalPages = res.data.total;
     });
   }
 }
