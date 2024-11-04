@@ -258,7 +258,7 @@ export class UsersService {
   private async createAdmin() {
     const admin = await this.cnx.findOne(User, {
       where: {
-        userName: 'admin',
+        userName: this.config.get('environment.admin.user'),
       },
     });
 
