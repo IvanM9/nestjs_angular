@@ -11,6 +11,6 @@ export default registerAs('environment', () => ({
   jwtSecret: process.env.JWT_SECRET || 'secretKey',
   admin: {
     user: process.env.ADMIN_USER || 'Admin_user1',
-    password: process.env.ADMIN_PASSWORD || 'Admin_user1',
+    password: process.env.ADMIN_PASSWORD || 'Admin_password1',
   },
 }));
