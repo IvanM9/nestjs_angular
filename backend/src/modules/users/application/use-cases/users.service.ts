@@ -287,4 +287,24 @@ export class UsersService {
       await this.create(newAdmin);
     }
   }
+
+  async changePassword(userName: string, password: string) {
+    const user = await this.cnx.findOne(User, {
+      where: {
+        userName,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    return await this.cnx
+      .update(User, user.id, {
+        password: await hashSync(password, 10),
+      })
+      .catch(() => {
+        throw new BadRequestException('Error al cambiar la contraseña');
+      });
+  }
 }

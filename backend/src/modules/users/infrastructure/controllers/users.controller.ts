@@ -23,6 +23,7 @@ import { CreateUserDto } from '../../application/dtos/create-user.dto';
 import { UpdateUserDto } from '../../application/dtos/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImportFromExcelDto } from '../../application/dtos/import-from-excel.dto';
+import { ChangePasswordDto } from '../../application/dtos/change-password.dto';
 
 @Controller('users')
 @ApiTags('users')
@@ -104,6 +105,15 @@ export class UsersController {
 
     return {
       message: 'Users imported successfully',
+    };
+  }
+
+  @Patch('change-password')
+  async changePassword(@Body() data: ChangePasswordDto) {
+    await this.service.changePassword(data.username, data.newPassword);
+
+    return {
+      message: 'Password changed successfully',
     };
   }
 }

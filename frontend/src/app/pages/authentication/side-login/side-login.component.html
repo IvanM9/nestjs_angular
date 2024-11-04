@@ -27,18 +27,18 @@
 
 
                     <form class="m-t-30" [formGroup]="form" (ngSubmit)="submit()">
-                      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Username</mat-label>
+                      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Usuario</mat-label>
                       <mat-form-field appearance="outline" class="w-100" color="primary">
                         <input matInput formControlName="uname" />
                         @if(f['uname'].touched && f['uname'].invalid) {
                         <mat-hint class="m-b-16 error-msg">
                           @if(f['uname'].errors &&
                           f['uname'].errors['required']) {
-                          <div class="text-error">Name is required.</div>
+                          <div class="text-error">Usuario es requerido.</div>
                           } @if(f['uname'].errors &&
                           f['uname'].errors['minlength']) {
                           <div class="text-error">
-                            Name should be 6 character.
+                            El usuario debe tener al menos 8 caracteres.
                           </div>
                           }
                         </mat-hint>
@@ -46,27 +46,26 @@
                       </mat-form-field>
 
                       <!-- password -->
-                      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Password</mat-label>
+                      <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Contraseña</mat-label>
                       <mat-form-field appearance="outline" class="w-100" color="primary">
                         <input matInput type="password" formControlName="password" />
                         @if(f['password'].touched && f['password'].invalid) {
                         <mat-hint class="m-b-16 error-msg">
                           @if(f['password'].errors &&
                           f['password'].errors['required']) {
-                          <div class="text-error">Password is required.</div>
+                          <div class="text-error">Contraseña es requerida.</div>
                           }
                         </mat-hint>
                         }
                       </mat-form-field>
 
                       <div class="d-block d-lg-flex align-items-center m-b-12">
-                        <mat-checkbox color="primary">Remember this Device</mat-checkbox>
-                        <a [routerLink]="['/']"
-                          class="text-primary f-w-600 text-decoration-none m-l-auto d-block f-s-14">Forgot Password
-                          ?</a>
+                        <mat-checkbox color="primary">Recordar este dispositivo</mat-checkbox>
+                        <button (click)="resetDialog()" type="button"
+                          class="text-primary f-w-600 text-decoration-none m-l-auto d-block f-s-14">Resetear contraseña</button>
                       </div>
                       <button mat-flat-button color="primary" class="w-100" [disabled]="!form.valid">
-                        Sign In
+                        Iniciar sesión
                       </button>
                       <!-- input -->
                     </form>

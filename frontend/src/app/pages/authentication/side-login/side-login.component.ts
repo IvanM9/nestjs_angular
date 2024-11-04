@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   FormGroup,
   FormControl,
@@ -10,6 +10,8 @@ import { Router, RouterModule } from '@angular/router';
 import { MaterialModule } from '../../../material.module';
 import { MatButtonModule } from '@angular/material/button';
 import { HttpClient } from '@angular/common/http';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ResetPasswordDialogComponent } from 'src/app/components/reset-password-dialog/reset-password-dialog.component';
 
 @Component({
   selector: 'app-side-login',
@@ -20,12 +22,15 @@ import { HttpClient } from '@angular/common/http';
     FormsModule,
     ReactiveFormsModule,
     MatButtonModule,
+    MatDialogModule
   ],
   templateUrl: './side-login.component.html',
 })
 export class AppSideLoginComponent {
   constructor(private router: Router, private http: HttpClient
   ) { }
+
+  readonly dialog = inject(MatDialog);
 
   form = new FormGroup({
     uname: new FormControl('', [Validators.required, Validators.minLength(8)]),
@@ -55,6 +60,16 @@ export class AppSideLoginComponent {
       this.router.navigate(['/dashboard']);
     }, (err) => {
       alert(err.error.message);
+    });
+  }
+
+  resetDialog() {
+    const dialogRef = this.dialog.open(ResetPasswordDialogComponent, {
+      width: '600px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
     });
   }
 }
