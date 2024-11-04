@@ -9,4 +9,8 @@ export default registerAs('environment', () => ({
     name: process.env.DB_NAME,
   },
   jwtSecret: process.env.JWT_SECRET || 'secretKey',
+  admin: {
+    user: process.env.ADMIN_USER || 'admin',
+    password: process.env.ADMIN_PASSWORD || 'admin',
+  },
 }));

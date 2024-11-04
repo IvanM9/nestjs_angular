@@ -14,6 +14,8 @@ import { UserRolesService } from '../../domain/services/user-roles.service';
 import { Session } from 'src/modules/auth/domain/entities/session.entity';
 import * as XLSX from 'xlsx';
 import { UsersRepository } from '../../infrastructure/persistence/users.repository';
+import { ConfigService } from '@nestjs/config';
+import { Role } from 'src/modules/auth/domain/entities/role.entity';
 
 @Injectable()
 export class UsersService {
@@ -21,7 +23,10 @@ export class UsersService {
     @InjectEntityManager() private cnx: EntityManager,
     private userRolesService: UserRolesService,
     private userRepository: UsersRepository,
-  ) {}
+    private config: ConfigService,
+  ) {
+    this.createAdmin();
+  }
 
   async create(data: CreateUserDto) {
     return await this.cnx.transaction(async (manager) => {
@@ -247,6 +252,39 @@ export class UsersService {
     } catch (e) {
       console.log(e.message);
       throw new BadRequestException('Error al importar usuarios');
+    }
+  }
+
+  private async createAdmin() {
+    const admin = await this.cnx.findOne(User, {
+      where: {
+        userName: 'admin',
+      },
+    });
+
+    if (!admin) {
+      const newAdmin: CreateUserDto = {
+        firstName: 'Admin',
+        lastName: 'Admin',
+        identification: '1234567890',
+        birthDate: new Date(),
+        userName: this.config.get('environment.admin.user'),
+        password: this.config.get('environment.admin.password'),
+        rolesId: [],
+      };
+
+      const adminRole = await this.cnx.findOne(Role, {
+        where: {
+          name: 'admin',
+        },
+        select: ['id'],
+      });
+
+      if (adminRole) {
+        newAdmin.rolesId.push(adminRole.id);
+      }
+
+      await this.create(newAdmin);
     }
   }
 }
