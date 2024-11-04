@@ -22,8 +22,6 @@ export class UsersRepository {
     page: number = 1,
     items: number = 5,
   ) {
-    console.log(search, page, items);
-
     const query = cnx
       .createQueryBuilder()
       .select([

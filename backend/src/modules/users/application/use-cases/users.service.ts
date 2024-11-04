@@ -244,7 +244,8 @@ export class UsersService {
       }
 
       return { message: 'Usuarios creados correctamente' };
-    } catch {
+    } catch (e) {
+      console.log(e.message);
       throw new BadRequestException('Error al importar usuarios');
     }
   }

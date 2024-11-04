@@ -37,7 +37,6 @@ export class UsersLastSessionsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(async result => {
-      console.log('The dialog was closed');
       await this.getUsers()
     });
   }
@@ -78,8 +77,40 @@ export class UsersLastSessionsComponent implements OnInit {
     });
 
     dialog.afterClosed().subscribe(async result => {
-      console.log('The dialog was closed');
       await this.getUsers()
     });
+  }
+
+  importFile(event: any) {
+    const file = event.target.files[0];
+    if (!file) {
+      return;
+    }
+
+    const allowedExtensions = ['csv', 'xlsx'];
+    const fileExtension = file.name.split('.').pop()?.toLowerCase();
+    if (!fileExtension || !allowedExtensions.includes(fileExtension)) {
+      alert('Por favor, seleccione un archivo CSV o XLSX.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    this.api.post('http://localhost:3000/users/import-from-excel', formData, {
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    }).subscribe(async (res: any) => {
+      await this.getUsers();
+      alert('Archivo importado exitosamente');
+    }, (error) => {
+      alert('Error al importar el archivo');
+    });
+  }
+
+  triggerFileInputClick(): void {
+    const fileInput = document.getElementById('fileInput') as HTMLElement;
+    if (fileInput) {
+      fileInput.click();
+    }
   }
 }

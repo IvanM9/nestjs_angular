@@ -67,7 +67,7 @@ export class UpdateUserDialogComponent implements OnInit {
     this.api.put(`http://localhost:3000/users/update/${this.data.userId}`, this.form.value, {
       headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
     }).subscribe((res: any) => {
-      alert('Usuario creado con éxito');
+      alert('Usuario actualizado con éxito');
       this.dialogRef.close();
     }, (err) => {
       alert(err.error.message);
