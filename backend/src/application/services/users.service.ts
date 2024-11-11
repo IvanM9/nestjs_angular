@@ -1,5 +1,5 @@
 import { hashSync } from 'bcrypt';
-import { EntityManager } from 'typeorm';
+import { EntityManager, MoreThan } from 'typeorm';
 import { Service } from 'typedi';
 import { UserEntity } from '@entities/users.entity';
 import { HttpException } from '@exceptions/HttpException';
@@ -143,16 +143,10 @@ export class UserService {
 
     const allUsers = [];
     for (const user of users.users) {
-      const numSessions = await this.cnx.count(SessionEntity, {
+      const numAttempts = await this.cnx.count(SessionEntity, {
         where: {
           userId: user.id,
-        },
-        order: {
-          firstDate: 'DESC',
-        },
-        select: {
-          failed: true,
-          lastDate: true,
+          firstDate: MoreThan(new Date(Date.now() - 1000 * 60 * 60)),
         },
       });
 
@@ -166,7 +160,7 @@ export class UserService {
         birthDate: user.birthDate,
         status: user.status,
         logged: user.logged,
-        numSessions
+        numAttempts
       });
     }
 

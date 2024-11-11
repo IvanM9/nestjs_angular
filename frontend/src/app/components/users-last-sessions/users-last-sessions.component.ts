@@ -25,7 +25,7 @@ export class UsersLastSessionsComponent implements OnInit {
   }
 
   searchValue: string = '';
-  displayedColumns: string[] = ['position', 'firstName', 'lastName', 'logged', 'status', 'actions'];
+  displayedColumns: string[] = ['position', 'firstName', 'lastName', 'logged', 'status', 'numAttempts', 'actions'];
   dataSource = [];
   totalPages = 0;
   currentPage = 1;
@@ -49,11 +49,12 @@ export class UsersLastSessionsComponent implements OnInit {
       let index = 1;
       this.dataSource = res.data.users.map((user: any) => ({
         position: index++,
-        logged: user.logged,
+        logged: user.logged ? 'Sí' : 'No',
         firstName: user.firstName,
         lastName: user.lastName,
         status: user.status ? 'Activo' : 'Inactivo',
-        id: user.id
+        id: user.id,
+        numAttempts: user.numAttempts
       }))
 
       this.totalPages = res.data.total;

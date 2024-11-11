@@ -22,7 +22,7 @@ export class LastSessionsComponent implements OnInit {
       headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`}
     }).subscribe((res:any)=>{
       this.dataSource = res.data.map((session: any)=>({
-        logged: session.logged ? 'Sí' : 'No',
+        logged: session.failed ? 'No' : 'Sí',
         firstDate: session.firstDate,
         lastDate: session.lastDate
       }))
