@@ -31,7 +31,7 @@ export class AuthService {
     this.cnx = dbDataSource.manager;
   }
 
-  public async login(userData: User): Promise<{ token: string }> {
+  public async login(userData: User): Promise<{ token: string, role: string[] }> {
     const user = await this.cnx
       .findOneOrFail(UserEntity, {
         where: [{ userName: userData.user }, { email: userData.user }],
@@ -65,6 +65,6 @@ export class AuthService {
     const tokenData = createToken(newSession.id);
     // const cookie = createCookie(tokenData);
 
-    return { token: tokenData.token };
+    return { token: tokenData.token, role: user.roleUsers.map((role) => role.role.name) };
   }
 }

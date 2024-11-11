@@ -13,7 +13,7 @@ export interface TokenData {
 interface SessionInterface {
   id: number;
   userId: number;
-  logged: boolean;
+  failed: boolean;
   firstDate: Date;
   lastDate: Date;
 }

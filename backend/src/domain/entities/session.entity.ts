@@ -16,8 +16,8 @@ export class SessionEntity {
   })
   lastDate: Date;
 
-  @Column()
-  logged: boolean;
+  @Column({default: false})
+  failed: boolean;
 
   @Column({ name: 'user_id' })
   userId: number;

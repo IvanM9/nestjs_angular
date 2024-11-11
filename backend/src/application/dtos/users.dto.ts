@@ -1,4 +1,4 @@
-import { IsString, Matches, Length, IsNumberString, IsDateString, IsArray, IsNumber, IsOptional, IsBoolean } from 'class-validator';
+import { IsString, Matches, Length, IsNumberString, IsDateString, IsArray, IsNumber, IsOptional, IsBoolean, IsStrongPassword } from 'class-validator';
 
 export class CreateUserDto {
   @Length(8, 20, {
@@ -26,18 +26,18 @@ export class CreateUserDto {
   @IsDateString()
   birthDate: Date;
 
-  // @IsStrongPassword(
-  //   {
-  //     minLength: 8,
-  //     minLowercase: 1,
-  //     minUppercase: 1,
-  //     minNumbers: 1,
-  //     minSymbols: 1,
-  //   },
-  //   {
-  //     message: 'La contraseña debe tener al menos 8 caracteres, una letra minúscula, una letra mayúscula, un número y un símbolo',
-  //   },
-  // )
+  @IsStrongPassword(
+    {
+      minLength: 8,
+      minLowercase: 1,
+      minUppercase: 1,
+      minNumbers: 1,
+      minSymbols: 1,
+    },
+    {
+      message: 'La contraseña debe tener al menos 8 caracteres, una letra minúscula, una letra mayúscula, un número y un símbolo',
+    },
+  )
   @Matches(/^\S*$/, {
     message: 'La contraseña no debe contener espacios',
   })

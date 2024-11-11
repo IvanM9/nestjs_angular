@@ -143,7 +143,7 @@ export class UserService {
 
     const allUsers = [];
     for (const user of users.users) {
-      const lastSession = await this.cnx.findOne(SessionEntity, {
+      const numSessions = await this.cnx.count(SessionEntity, {
         where: {
           userId: user.id,
         },
@@ -151,12 +151,10 @@ export class UserService {
           firstDate: 'DESC',
         },
         select: {
-          logged: true,
+          failed: true,
           lastDate: true,
         },
       });
-
-      const logged = lastSession?.logged && !lastSession?.lastDate ? 'Sí' : 'No';
 
       allUsers.push({
         id: user.id,
@@ -167,7 +165,8 @@ export class UserService {
         identification: user.identification,
         birthDate: user.birthDate,
         status: user.status,
-        logged,
+        logged: user.logged,
+        numSessions
       });
     }
 
@@ -256,7 +255,7 @@ export class UserService {
     }
   }
 
-  async changePassword(userName: string, password: string) {
+  async changePassword(userName: string, newPassword: string) {
     const user = await this.cnx.findOne(UserEntity, {
       where: {
         userName,
@@ -269,7 +268,7 @@ export class UserService {
 
     return await this.cnx
       .update(UserEntity, user.id, {
-        password: await hashSync(password, 10),
+        password: await hashSync(newPassword, 10),
       })
       .catch(() => {
         throw new HttpException(400, 'Error al cambiar la contraseña');

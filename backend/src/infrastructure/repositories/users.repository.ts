@@ -17,6 +17,7 @@ export class UsersRepository {
         'user.status as status',
         'user.user_name as "userName"',
         'user.email as email',
+        'user.logged as logged'
       ])
       .from(UserEntity, 'user')
       .leftJoinAndSelect('user.person', 'person')

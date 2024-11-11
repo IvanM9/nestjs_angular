@@ -15,9 +15,9 @@ export class AuthController {
         user:  req.headers.user ? req.headers.user.toString() : '',
         password: req.headers.password ? req.headers.password.toString() : '',
       };
-      const { token } = await this.auth.login(userData);
+      const { token, role } = await this.auth.login(userData);
 
-      res.status(200).json({ data: token, message: 'login' });
+      res.status(200).json({ data: {token, role}, message: 'login' });
     } catch (error) {
       next(error);
     }

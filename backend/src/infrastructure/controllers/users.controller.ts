@@ -65,4 +65,26 @@ export class UserController {
       next(error);
     }
   };
+
+  changePassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { newPassword, username } = req.body;
+      const changePasswordData = await this.user.changePassword(username, newPassword);
+
+      res.status(200).json({ data: changePasswordData, message: 'Contraseña cambiada' });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  importFromExcel = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const importData = await this.user.importFromExcel(req.file);
+
+      res.status(200).json({ data: importData, message: 'Usuarios importados' });
+    } catch (error) {
+      next(error);
+    }
+  }
+
 }

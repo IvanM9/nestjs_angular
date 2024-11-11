@@ -1,11 +1,10 @@
 import { NextFunction, Response } from 'express';
 import { verify } from 'jsonwebtoken';
-import { SECRET_KEY } from '@/infrastructure/config';
-import { UserEntity } from '@/domain/entities/users.entity';
-import { HttpException } from '@/infrastructure/exceptions/HttpException';
-import { DataStoredInToken, RequestWithUser } from '@/domain/interfaces/auth.interface';
+import { SECRET_KEY } from '@config';
+import { HttpException } from '@exceptions/HttpException';
+import { DataStoredInToken, RequestWithUser } from '@interfaces/auth.interface';
 import { dbDataSource } from '@database';
-import { SessionEntity } from '@/domain/entities/session.entity';
+import { SessionEntity } from '@entities/session.entity';
 
 const getAuthorization = req => {
   const coockie = req.cookies['Authorization'];
@@ -29,7 +28,7 @@ export const AuthMiddleware = async (req: RequestWithUser, res: Response, next: 
         select: {
           id: true,
           userId: true,
-          logged: true,
+          failed: true,
           firstDate: true,
           lastDate: true,
         },

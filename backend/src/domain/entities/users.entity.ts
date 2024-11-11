@@ -31,6 +31,9 @@ export class UserEntity {
   @Column({ default: true })
   status: boolean;
 
+  @Column({default: false})
+  logged: boolean
+
   @Column({ name: 'person_id' })
   personId: number;
 

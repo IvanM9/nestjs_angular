@@ -5,6 +5,7 @@ import { SessionEntity } from '@entities/session.entity';
 import { UserService } from '@services/users.service';
 import { HttpException } from '@exceptions/HttpException';
 import { dbDataSource } from '@database';
+import { UserEntity } from '@/domain/entities/users.entity';
 
 @Service()
 export class SessionsService {
@@ -18,17 +19,21 @@ export class SessionsService {
   async createSession(userId: number, logged: boolean) {
     const session = this.cnx.create(SessionEntity, {
       firstDate: new Date(),
-      logged,
+      failed: !logged,
       userId,
     });
 
     const loggedSession = await this.cnx.save(session);
 
-    if (!logged) {
+      await this.cnx.update(UserEntity, userId, { logged }).catch(err => {
+        throw new HttpException(400, 'Error al iniciar sesión');
+      });
+
+      if(!logged) {
       const failedAttempts = await this.cnx.count(SessionEntity, {
         where: {
           userId,
-          logged: false,
+          failed: true,
           firstDate: MoreThan(new Date(Date.now() - 1000 * 60 * 60)),
         },
       });
@@ -44,12 +49,11 @@ export class SessionsService {
   }
 
   async verifySession(userId: number) {
-    return this.cnx.findOne(SessionEntity, {
+    return this.cnx.findOne(UserEntity, {
       where: {
-        userId,
+        id: userId,
         logged: true,
-        lastDate: IsNull(),
-        firstDate: MoreThan(new Date(Date.now() - 1000 * 60 * 60)),
+        status: true
       },
     });
   }
@@ -65,7 +69,13 @@ export class SessionsService {
 
     session.lastDate = new Date();
 
-    return this.cnx.save(session);
+    await this.cnx.update(UserEntity, session.userId, { logged: false }).catch(err => {
+      throw new HttpException(400, 'Error al cerrar la sesión');
+    });
+
+    return this.cnx.save(session).catch(err => {
+      throw new HttpException(400, 'Error al cerrar la sesión');
+    });
   }
 
   async getLatestSession(sessionId: number) {
@@ -86,7 +96,7 @@ export class SessionsService {
       id: session.id,
       firstDate: moment(session.firstDate).locale('es').tz('America/Guayaquil').format('dddd, MMMM D, YYYY, h:mm a'),
       lastDate: session.lastDate ? moment(session.lastDate).locale('es').tz('America/Guayaquil').format('dddd, MMMM D, YYYY, h:mm a') : null,
-      logged: session.logged,
+      failed: session.failed,
     }));
   }
 }

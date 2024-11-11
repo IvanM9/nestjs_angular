@@ -13,4 +13,5 @@ export interface UserInterface {
   status: boolean;
   userName: string;
   email: string;
+  logged: boolean;
 }
