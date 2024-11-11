@@ -7,7 +7,7 @@ export class RoleRoute implements Routes {
   public router = Router();
   public roles = new RolesController();
 
-  constructor(){
+  constructor() {
     this.initializeRoutes();
   }
 
@@ -16,7 +16,6 @@ export class RoleRoute implements Routes {
     this.router.get(`${this.path}/:id(\\d+)`, this.roles.getById);
     this.router.post(`${this.path}`, this.roles.create);
     this.router.put(`${this.path}/:id(\\d+)`, this.roles.update);
-    this.router.patch(`${this.path}/:id(\\d+)/status(true|false)`, this.roles.updateStatus );
+    this.router.patch(`${this.path}/:id(\\d+)/status(true|false)`, this.roles.updateStatus);
   }
-
 }

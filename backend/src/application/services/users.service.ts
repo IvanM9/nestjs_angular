@@ -11,7 +11,7 @@ import { UserRolesService } from './user-roles.service';
 import { UsersRepository } from '@repositories/users.repository';
 import { ADMIN_PASSWORD, ADMIN_USER } from '@config';
 import * as XLSX from 'xlsx';
-import { dbDataSource } from '@/infrastructure/database';
+import { dbDataSource } from '@database';
 
 @Service()
 export class UserService {

@@ -5,50 +5,50 @@ import Container from 'typedi';
 export class OptionsController {
   service = Container.get(OptionsService);
 
-  async getOptions(req: Request, res: Response, next: NextFunction) {
+  getOptions = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      res.status(200).json({ data: await this.service.getOptions() });
+      res.status(200).json({ data: await this.service.getOptions(), message: 'Opciones encontradas' });
     } catch (error) {
       next(error);
     }
-  }
+  };
 
-  async createOption(req: Request, res: Response, next: NextFunction) {
+  createOption = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      res.status(201).json({ data: await this.service.createOption(req.body) });
+      res.status(201).json({ data: await this.service.createOption(req.body), message: 'Creado' });
     } catch (error) {
       next(error);
     }
-  }
+  };
 
-  async getOption(req: Request, res: Response, next: NextFunction) {
-    try {
-      const id = Number(req.params.id);
-
-      res.status(200).json({ data: await this.service.getOption(id) });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async updateOption(req: Request, res: Response, next: NextFunction) {
+  getOption = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = Number(req.params.id);
 
-      res.status(200).json({ data: await this.service.update(id, req.body) });
+      res.status(200).json({ data: await this.service.getOption(id), message: 'Opción encontrada' });
     } catch (error) {
       next(error);
     }
-  }
+  };
 
-  async updateStatus(req: Request, res: Response, next: NextFunction) {
+  updateOption = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id);
+
+      res.status(200).json({ data: await this.service.update(id, req.body), message: 'Actualizado' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  updateStatus = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = Number(req.params.id);
       const status = req.params.status === 'true';
 
-      res.status(200).json({ data: await this.service.updateStatus(id, status) });
+      res.status(200).json({ data: await this.service.updateStatus(id, status), message: 'Estado actualizado' });
     } catch (error) {
       next(error);
     }
-  }
+  };
 }

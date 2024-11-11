@@ -1,6 +1,6 @@
 import { HttpException } from '@exceptions/HttpException';
 import { RoleEntity } from '@entities/role.entity';
-import Container, { Service } from 'typedi';
+import { Service, Container } from 'typedi';
 import { EntityManager } from 'typeorm';
 import { CreateRoleDto } from '@dtos/create-role.dto';
 import { RoleOptionsService } from '@services/role_options.service';
@@ -10,7 +10,7 @@ import { dbDataSource } from '@database';
 export class RolesService {
   cnx: EntityManager;
   roleOptions = Container.get(RoleOptionsService);
-  
+
   constructor() {
     this.cnx = dbDataSource.manager;
   }
