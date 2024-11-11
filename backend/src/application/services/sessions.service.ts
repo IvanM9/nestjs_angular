@@ -1,15 +1,17 @@
 import { EntityManager, IsNull, MoreThan } from 'typeorm';
 import moment from 'moment-timezone';
-import { Service } from 'typedi';
+import { Service, Container } from 'typedi';
 import { SessionEntity } from '@entities/session.entity';
 import { UserService } from '@services/users.service';
 import { HttpException } from '@exceptions/HttpException';
-import { dbDataSource } from '@/infrastructure/database';
+import { dbDataSource } from '@database';
 
 @Service()
 export class SessionsService {
   cnx: EntityManager;
-  constructor(private userService: UserService) {
+  userService: UserService = Container.get(UserService);
+
+  constructor() {
     this.cnx = dbDataSource.manager;
   }
 

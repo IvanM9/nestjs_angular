@@ -10,6 +10,14 @@ export interface TokenData {
   expiresIn: number;
 }
 
+interface SessionInterface {
+  id: number;
+  userId: number;
+  logged: boolean;
+  firstDate: Date;
+  lastDate: Date;
+}
+
 export interface RequestWithUser extends Request {
-  user: User;
+  session: SessionInterface;
 }

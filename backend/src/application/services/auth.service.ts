@@ -1,6 +1,6 @@
 import { compare, hash } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
-import { Service } from 'typedi';
+import Container, { Service } from 'typedi';
 import { EntityManager } from 'typeorm';
 import { SECRET_KEY } from '@config';
 import { UserEntity } from '@entities/users.entity';
@@ -8,9 +8,10 @@ import { HttpException } from '@exceptions/HttpException';
 import { DataStoredInToken, TokenData } from '@/domain/interfaces/auth.interface';
 import { User } from '@interfaces/users.interface';
 import { dbDataSource } from '@database';
+import { SessionsService } from './sessions.service';
 
-const createToken = (user: User): TokenData => {
-  const dataStoredInToken: DataStoredInToken = { id: user.id };
+const createToken = (sessionId: number): TokenData => {
+  const dataStoredInToken: DataStoredInToken = { id: sessionId };
   const secretKey: string = SECRET_KEY;
   const expiresIn: number = 60 * 60 * 24;
 
@@ -24,38 +25,46 @@ const createCookie = (tokenData: TokenData): string => {
 @Service()
 export class AuthService {
   cnx: EntityManager;
+  sessionService = Container.get(SessionsService);
 
   constructor() {
     this.cnx = dbDataSource.manager;
   }
 
-  public async signup(userData: User): Promise<User> {
-    const findUser: User = await this.cnx.findOne(UserEntity, { where: { email: userData.email } });
-    if (findUser) throw new HttpException(409, `This email ${userData.email} already exists`);
+  public async login(userData: User): Promise<{ token: string }> {
+    const user = await this.cnx
+      .findOneOrFail(UserEntity, {
+        where: [{ userName: userData.user }, { email: userData.user }],
+        select: { password: true, status: true, id: true },
+        relations: {
+          roleUsers: {
+            role: true,
+          },
+        },
+      })
+      .catch(() => {
+        throw new HttpException(409, 'Usuario no encontrado');
+      });
 
-    const hashedPassword = await hash(userData.password, 10);
-    const createUserData: User = this.cnx.create(UserEntity, { ...userData, password: hashedPassword });
-    await this.cnx.save(createUserData);
-    return createUserData;
-  }
+    if (await this.sessionService.verifySession(user.id)) {
+      throw new HttpException(409, 'El usuario ya tiene una sesión activa');
+    }
 
-  public async login(userData: User): Promise<{ cookie: string; findUser: User }> {
-    const findUser: User = await this.cnx.findOne(UserEntity, { where: { email: userData.email } });
-    if (!findUser) throw new HttpException(409, `This email ${userData.email} was not found`);
+    if (!user.status)
+      throw new HttpException(409,'El usuario se encuentra desactivado o bloqueado',
+      );
 
-    const isPasswordMatching: boolean = await compare(userData.password, findUser.password);
-    if (!isPasswordMatching) throw new HttpException(409, 'Password not matching');
+    const isPasswordMatching: boolean = await compare(userData.password, user.password);
+    if (!isPasswordMatching) {
+      await this.sessionService.createSession(user.id, false);
+      throw new HttpException(409, 'Password not matching');
+    }
 
-    const tokenData = createToken(findUser);
-    const cookie = createCookie(tokenData);
+    const newSession = await this.sessionService.createSession(user.id, true);
 
-    return { cookie, findUser };
-  }
+    const tokenData = createToken(newSession.id);
+    // const cookie = createCookie(tokenData);
 
-  public async logout(userData: User): Promise<User> {
-    const findUser: User = await this.cnx.findOne(UserEntity, { where: { email: userData.email, password: userData.password } });
-    if (!findUser) throw new HttpException(409, "User doesn't exist");
-
-    return findUser;
+    return { token: tokenData.token };
   }
 }
