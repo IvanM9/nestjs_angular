@@ -12,12 +12,12 @@ Para ejecutar el backend, se debe ejecutar el comando `yarn run start` en la car
 ### Backend
 El backend necesita las siguientes variables de entorno para funcionar correctamente:
 
-- `DB_USER`: Usuario de la base de datos.
-- `DB_PASSWORD`: Contraseña del usuario de la base de datos.
-- `DB_NAME`: Nombre de la base de datos.
-- `DB_HOST`: Host de la base de datos. (Por defecto, `localhost`)
-- `DB_PORT`: Puerto de la base de datos (Por defecto, `5432`)
-- `JWT_SECRET`: Clave secreta para la generación de tokens JWT. (Por defecto, `secret`)
+- `POSTGRES_USER`: Usuario de la base de datos.
+- `POSTGRES_PASSWORD`: Contraseña del usuario de la base de datos.
+- `POSTGRES_DATABASE`: Nombre de la base de datos.
+- `POSTGRES_HOST`: Host de la base de datos. (Por defecto, `localhost`)
+- `POSTGRES_PORT`: Puerto de la base de datos (Por defecto, `5432`)
+- `SECRET_KEY`: Clave secreta para la generación de tokens JWT. (Por defecto, `secret`)
 - `ADMIN_USER`: Usuario administrador. (Por defecto, `Admin_user1`)
 - `ADMIN_PASSWORD`: Contraseña del usuario administrador. (Por defecto, `Admin_password1`)
 

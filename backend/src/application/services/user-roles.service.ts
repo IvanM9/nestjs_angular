@@ -6,8 +6,6 @@ import { EntityManager } from 'typeorm';
 
 @Service()
 export class UserRolesService {
-  //   constructor(@InjectEntityManager() private cnx: EntityManager) {}
-
   async assignRole(userId: number, roleId: number, cnx: EntityManager) {
     const existRole = await cnx.findOne(RoleEntity, {
       where: {

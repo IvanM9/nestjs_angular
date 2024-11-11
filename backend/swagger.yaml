@@ -6,6 +6,22 @@ paths:
 # [GET] users
   /users:
     get:
+      parameters:
+      - name: search
+        in: query
+        description: Búsqueda por nombre o apellido
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: Número de página
+        required: false
+        type: integer
+      - name: items
+        in: query
+        description: Cantidad de registros por página
+        required: false
+        type: integer
       tags:
       - users
       summary: Find All Users
@@ -108,15 +124,32 @@ definitions:
   users:
     type: object
     required:
-        - email
+        - userName
+        - firstName
+        - lastName
+        - identification
+        - birthDate
         - password
+        - rolesId
     properties:
-      email:
+      userName:
         type: string
-        description: user Email
+      firstName:
+        type: string
+      lastName:
+        type: string
+      identification:
+        type: string
+      birthDate:
+        type: string
+        format: date
       password:
         type: string
-        description: user Password
+      rolesId:
+        type: array
+        items:
+          type: integer
+          format: int64
 
 schemes:
  - https

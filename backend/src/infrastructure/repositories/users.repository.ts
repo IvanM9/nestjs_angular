@@ -1,7 +1,9 @@
 import { EntityManager } from 'typeorm';
 import { UserEntity } from '@/domain/entities/users.entity';
 import { UserInterface } from '@/domain/interfaces/users.interface';
+import { Service } from 'typedi';
 
+@Service()
 export class UsersRepository {
   async getAllUsers(cnx: EntityManager, search: string, page = 1, items = 5) {
     const query = cnx

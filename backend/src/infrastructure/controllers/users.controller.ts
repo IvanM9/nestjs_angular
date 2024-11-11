@@ -1,16 +1,20 @@
 import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
-import { User } from '@/domain/interfaces/users.interface';
-import { UserService } from '@/application/services/users.service';
+import { UserService } from '@services/users.service';
+import { CreateUserDto } from '@dtos/users.dto';
 
 export class UserController {
   public user = Container.get(UserService);
 
   public getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const findAllUsersData: User[] = await this.user.findAllUser();
+      const search = req.query.search ? (req.query.search as string) : null;
+      const page = req.query.page ? Number(req.query.page) : null;
+      const items = req.query.items ? Number(req.query.items) : null;
 
-      res.status(200).json({ data: findAllUsersData, message: 'findAll' });
+      const findAllUsersData = await this.user.getAllUsers(search, page, items);
+
+      res.status(200).json({ data: findAllUsersData, message: 'Usuarios encontrados' });
     } catch (error) {
       next(error);
     }
@@ -19,9 +23,9 @@ export class UserController {
   public getUserById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userId = Number(req.params.id);
-      const findOneUserData: User = await this.user.findUserById(userId);
+      const findOneUserData = await this.user.getById(userId);
 
-      res.status(200).json({ data: findOneUserData, message: 'findOne' });
+      res.status(200).json({ data: findOneUserData, message: 'Usuario encontrado' });
     } catch (error) {
       next(error);
     }
@@ -29,10 +33,10 @@ export class UserController {
 
   public createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userData: User = req.body;
-      const createUserData: User = await this.user.createUser(userData);
+      const userData: CreateUserDto = req.body;
+      const createUserData = await this.user.create(userData);
 
-      res.status(201).json({ data: createUserData, message: 'created' });
+      res.status(201).json({ data: createUserData, message: 'Creado' });
     } catch (error) {
       next(error);
     }
@@ -41,21 +45,22 @@ export class UserController {
   public updateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userId = Number(req.params.id);
-      const userData: User = req.body;
-      const updateUserData: User = await this.user.updateUser(userId, userData);
+      const userData = req.body;
+      const updateUserData = await this.user.update(userId, userData);
 
-      res.status(200).json({ data: updateUserData, message: 'updated' });
+      res.status(200).json({ data: updateUserData, message: 'Actualizado' });
     } catch (error) {
       next(error);
     }
   };
 
-  public deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public updateStatus = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userId = Number(req.params.id);
-      const deleteUserData: User = await this.user.deleteUser(userId);
+      const status = req.params.status === 'true';
+      const deleteUserData = await this.user.updateStatus(userId, status);
 
-      res.status(200).json({ data: deleteUserData, message: 'deleted' });
+      res.status(200).json({ data: deleteUserData, message: 'Estado modificado' });
     } catch (error) {
       next(error);
     }

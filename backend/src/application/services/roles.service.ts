@@ -4,14 +4,17 @@ import { Service } from 'typedi';
 import { EntityManager } from 'typeorm';
 import { CreateRoleDto } from '@dtos/create-role.dto';
 import { RoleOptionsService } from '@services/role_options.service';
+import { dbDataSource } from '@database';
 
 @Service()
 export class RolesService {
-  constructor(private cnx: EntityManager, private roleOptions: RoleOptionsService) {
+  cnx: EntityManager;
+  constructor(private roleOptions: RoleOptionsService) {
+    this.cnx = dbDataSource.manager;
     this.createAdminRole();
   }
 
-  private async createAdminRole() {
+  async createAdminRole() {
     const role = await this.cnx.findOne(RoleEntity, {
       where: {
         name: 'admin',

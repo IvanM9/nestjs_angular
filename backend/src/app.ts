@@ -8,11 +8,14 @@ import morgan from 'morgan';
 import compression from 'compression';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
-import { NODE_ENV, LOG_FORMAT, ORIGIN, CREDENTIALS, PORT } from '@/infrastructure/config';
-import { dbConnection } from '@/infrastructure/database';
-import { Routes } from '@/domain/interfaces/routes.interface';
-import { ErrorMiddleware } from '@/infrastructure/middlewares/error.middleware';
-import { logger, stream } from '@/shared/utils/logger';
+import { NODE_ENV, LOG_FORMAT, ORIGIN, CREDENTIALS, PORT } from '@config';
+import { dbDataSource } from '@database';
+import { Routes } from '@interfaces/routes.interface';
+import { ErrorMiddleware } from '@middlewares/error.middleware';
+import { logger, stream } from '@utils/logger';
+import Container from 'typedi';
+import { UserService } from '@services/users.service';
+import { RolesService } from '@services/roles.service';
 
 export class App {
   public app: express.Application;
@@ -32,7 +35,7 @@ export class App {
   }
 
   public listen() {
-    this.app.listen(this.port, () => {
+    this.app.listen(this.port, async () => {
       logger.info(`=================================`);
       logger.info(`======= ENV: ${this.env} =======`);
       logger.info(`🚀 App listening on the port ${this.port}`);
@@ -45,7 +48,17 @@ export class App {
   }
 
   private async connectToDatabase() {
-    await dbConnection();
+    dbDataSource
+      .initialize()
+      .then(async () => {
+        logger.info('🟢 The database is connected.');
+        await Container.get(RolesService).createAdminRole();
+        await Container.get(UserService).createAdmin();
+      })
+      .catch(error => {
+        logger.error(`❌ Unable to connect to the database: ${error}`);
+        process.exit(1);
+      });
   }
 
   private initializeMiddlewares() {

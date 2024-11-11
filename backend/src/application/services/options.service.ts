@@ -1,12 +1,16 @@
 import { EntityManager } from 'typeorm';
 import { CreateOptionDto } from '@dtos/create-option.dto';
 import { Service } from 'typedi';
-import { OptionEntity } from '@/domain/entities/option.entity';
-import { HttpException } from '@/infrastructure/exceptions/HttpException';
+import { OptionEntity } from '@entities/option.entity';
+import { HttpException } from '@exceptions/HttpException';
+import { dbDataSource } from '@database';
 
 @Service()
 export class OptionsService {
-  constructor(private cnx: EntityManager) {}
+  cnx: EntityManager;
+  constructor() {
+    this.cnx = dbDataSource.manager;
+  }
 
   async getOptions() {
     const options = await this.cnx.find(OptionEntity);

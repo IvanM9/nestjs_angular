@@ -18,6 +18,6 @@ export class UserRoute implements Routes {
     this.router.get(`${this.path}/:id(\\d+)`, this.user.getUserById);
     this.router.post(`${this.path}`, ValidationMiddleware(CreateUserDto), this.user.createUser);
     this.router.put(`${this.path}/:id(\\d+)`, ValidationMiddleware(CreateUserDto, true), this.user.updateUser);
-    this.router.delete(`${this.path}/:id(\\d+)`, this.user.deleteUser);
+    this.router.patch(`${this.path}/:id(\\d+)/status/:status(true|false)`, this.user.updateStatus);
   }
 }

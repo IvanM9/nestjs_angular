@@ -4,10 +4,14 @@ import { Service } from 'typedi';
 import { SessionEntity } from '@entities/session.entity';
 import { UserService } from '@services/users.service';
 import { HttpException } from '@exceptions/HttpException';
+import { dbDataSource } from '@/infrastructure/database';
 
 @Service()
 export class SessionsService {
-  constructor(private cnx: EntityManager, private userService: UserService) {}
+  cnx: EntityManager;
+  constructor(private userService: UserService) {
+    this.cnx = dbDataSource.manager;
+  }
 
   async createSession(userId: number, logged: boolean) {
     const session = this.cnx.create(SessionEntity, {
@@ -65,7 +69,9 @@ export class SessionsService {
   async getLatestSession(sessionId: number) {
     const currentSession = await this.cnx.findOne(SessionEntity, {
       where: { id: sessionId },
-      select: ['userId'],
+      select: {
+        userId: true,
+      },
     });
 
     const sessions = await this.cnx.find(SessionEntity, {

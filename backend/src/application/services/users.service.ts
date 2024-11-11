@@ -11,10 +11,15 @@ import { UserRolesService } from './user-roles.service';
 import { UsersRepository } from '@repositories/users.repository';
 import { ADMIN_PASSWORD, ADMIN_USER } from '@config';
 import * as XLSX from 'xlsx';
+import { dbDataSource } from '@/infrastructure/database';
 
 @Service()
 export class UserService {
-  constructor(private cnx: EntityManager, private userRepository: UsersRepository, private userRolesService: UserRolesService) {}
+  cnx: EntityManager;
+  constructor(private userRepository: UsersRepository, private userRolesService: UserRolesService) {
+    this.cnx = dbDataSource.manager;
+  }
+
   async create(data: CreateUserDto) {
     return await this.cnx.transaction(async manager => {
       const existUser = await manager.findOne(UserEntity, {
@@ -23,9 +28,9 @@ export class UserService {
             userName: data.userName,
           },
           {
-            person: {
-              identification: data.identification,
-            },
+            person: await manager.findOne(PersonEntity, {
+              where: { identification: data.identification },
+            }),
           },
         ],
       });
@@ -138,18 +143,18 @@ export class UserService {
 
     const allUsers = [];
     for (const user of users.users) {
-      const lastSession = await this.cnx.findOne(
-        SessionEntity,
-        {
+      const lastSession = await this.cnx.findOne(SessionEntity, {
+        where: {
           userId: user.id,
         },
-        {
-          order: {
-            firstDate: 'DESC',
-          },
-          select: ['logged', 'firstDate', 'lastDate'],
+        order: {
+          firstDate: 'DESC',
         },
-      );
+        select: {
+          logged: true,
+          lastDate: true,
+        },
+      });
 
       const logged = lastSession?.logged && !lastSession?.lastDate ? 'Sí' : 'No';
 
@@ -218,7 +223,7 @@ export class UserService {
     }
   }
 
-  private async createAdmin() {
+  async createAdmin() {
     const admin = await this.cnx.findOne(UserEntity, {
       where: {
         userName: ADMIN_USER,

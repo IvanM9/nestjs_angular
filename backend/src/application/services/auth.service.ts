@@ -2,11 +2,12 @@ import { compare, hash } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { Service } from 'typedi';
 import { EntityManager } from 'typeorm';
-import { SECRET_KEY } from '@/infrastructure/config';
-import { UserEntity } from '@/domain/entities/users.entity';
-import { HttpException } from '@/infrastructure/exceptions/HttpException';
+import { SECRET_KEY } from '@config';
+import { UserEntity } from '@entities/users.entity';
+import { HttpException } from '@exceptions/HttpException';
 import { DataStoredInToken, TokenData } from '@/domain/interfaces/auth.interface';
-import { User } from '@/domain/interfaces/users.interface';
+import { User } from '@interfaces/users.interface';
+import { dbDataSource } from '@database';
 
 const createToken = (user: User): TokenData => {
   const dataStoredInToken: DataStoredInToken = { id: user.id };
@@ -22,7 +23,11 @@ const createCookie = (tokenData: TokenData): string => {
 
 @Service()
 export class AuthService {
-  constructor(private cnx: EntityManager) {}
+  cnx: EntityManager;
+
+  constructor() {
+    this.cnx = dbDataSource.manager;
+  }
 
   public async signup(userData: User): Promise<User> {
     const findUser: User = await this.cnx.findOne(UserEntity, { where: { email: userData.email } });

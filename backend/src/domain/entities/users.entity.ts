@@ -1,15 +1,15 @@
 import { IsNotEmpty } from 'class-validator';
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, OneToMany } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, OneToMany, Entity } from 'typeorm';
 import { PersonEntity } from '@entities/person.entity';
 import { SessionEntity } from '@entities/session.entity';
 import { RoleUserEntity } from '@entities/role-user.entity';
 
-@Entity()
+@Entity('users')
 export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column({ unique: true, name: 'user_name' })
   userName: string;
 
   @Column({ unique: true })
