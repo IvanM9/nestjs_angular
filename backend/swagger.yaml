@@ -89,7 +89,7 @@ paths:
         description: user Data
         required: true
         schema:
-          $ref: '#/definitions/users'
+          $ref: '#/definitions/update-users'
       responses:
         200:
           description: 'OK'
@@ -119,6 +119,211 @@ paths:
         500:
           description: 'Server Error'
 
+  /roles:
+    get:
+      tags:
+      - roles
+      summary: Find All Roles
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+
+    post:
+      tags:
+      - roles
+      summary: Add Role
+      parameters:
+      - name: body
+        in: body
+        description: Role Data
+        required: true
+        schema:
+          $ref: '#/definitions/roles'
+      responses:
+        201:
+          description: 'Created'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+  /roles/{id}:
+    get:
+      tags:
+      - roles
+      summary: Find Role By Id
+      parameters:
+      - name: id
+        in: path
+        description: Role Id
+        required: true
+        type: integer
+      responses:
+        200:
+          description: 'OK'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+    put:
+      tags:
+      - roles
+      summary: Update Role By Id
+      parameters:
+      - name: id
+        in: path
+        description: Role Id
+        required: true
+        type: integer
+      - name: body
+        in: body
+        description: Role Data
+        required: true
+        schema:
+          $ref: '#/definitions/roles'
+      responses:
+        200:
+          description: 'OK'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+  /roles/{id}/{status}:
+    patch:
+      tags:
+      - roles
+      summary: Update Role Status By Id
+      parameters:
+      - name: id
+        in: path
+        description: Role Id
+        required: true
+        type: integer
+      - name: status
+        in: path
+        description: Role Status
+        required: true
+        type: string
+      responses:
+        200:
+          description: 'OK'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+  /options:
+    get:
+      tags:
+      - options
+      summary: Find All Options
+      responses:
+        200:
+          description: 'OK'
+        500:
+          description: 'Server Error'
+
+    post:
+      tags:
+      - options
+      summary: Add Option
+      parameters:
+      - name: body
+        in: body
+        description: Option Data
+        required: true
+        schema:
+          $ref: '#/definitions/options'
+      responses:
+        201:
+          description: 'Created'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+  /options/{id}:
+    get:
+      tags:
+      - options
+      summary: Find Option By Id
+      parameters:
+      - name: id
+        in: path
+        description: Option Id
+        required: true
+        type: integer
+      responses:
+        200:
+          description: 'OK'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+    put:
+      tags:
+      - options
+      summary: Update Option By Id
+      parameters:
+      - name: id
+        in: path
+        description: Option Id
+        required: true
+        type: integer
+      - name: body
+        in: body
+        description: Option Data
+        required: true
+        schema:
+          $ref: '#/definitions/options'
+      responses:
+        200:
+          description: 'OK'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+  /options/{id}/{status}:
+    patch:
+      tags:
+      - options
+      summary: Update Option Status By Id
+      parameters:
+      - name: id
+        in: path
+        description: Option Id
+        required: true
+        type: integer
+      - name: status
+        in: path
+        description: Option Status
+        required: true
+        type: string
+      responses:
+        200:
+          description: 'OK'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
 # definitions
 definitions:
   users:
@@ -151,6 +356,54 @@ definitions:
           type: integer
           format: int64
 
+  update-users:
+    type: object
+    required:
+        - firstName
+        - lastName
+        - identification
+        - birthDate
+        - rolesId
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+      identification:
+        type: string
+      birthDate:
+        type: string
+        format: date
+      rolesId:
+        type: array
+        items:
+          type: integer
+          format: int64
+
+  roles:
+    type: object
+    required:
+        - name
+        - options
+    properties:
+      name:
+        type: string
+      options:
+        type: array
+        items:
+          type: integer
+          format: int64
+
+  options:
+    type: object
+    required:
+        - name
+        - description
+    properties:
+      name:
+        type: string
+      description:
+        type: string
 schemes:
  - https
  - http

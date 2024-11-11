@@ -1,8 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsNumber, IsString } from 'class-validator';
 
 export class CreateRoleDto {
-  @ApiProperty()
   @IsString()
   name: string;
 
@@ -10,7 +8,6 @@ export class CreateRoleDto {
   // @IsString()
   // description: string;
 
-  @ApiProperty({ type: [Number] })
   @IsArray()
   @IsNumber({}, { each: true })
   options: number[];
