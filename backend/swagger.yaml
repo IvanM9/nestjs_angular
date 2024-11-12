@@ -87,6 +87,8 @@ paths:
       tags:
       - users
       summary: Find All Users
+      security:
+      - Bearer: []
       responses:
         200:
           description: 'OK'
@@ -106,6 +108,8 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/users'
+      security:
+      - Bearer: []
       responses:
         201:
           description: 'Created'
@@ -128,6 +132,8 @@ paths:
         description: User Id
         required: true
         type: integer
+      security:
+      - Bearer: []
       responses:
         200:
           description: 'OK'
@@ -154,6 +160,8 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/update-users'
+      security:
+      - Bearer: []
       responses:
         200:
           description: 'OK'
@@ -181,6 +189,8 @@ paths:
         description: User Status
         required: true
         type: string
+      security:
+      - Bearer: []
       responses:
         200:
           description: 'OK'
@@ -210,6 +220,27 @@ paths:
           description: 'Bad Request'
         401:
           description: 'Unauthorized'
+        500:
+          description: 'Server Error'
+
+  /users/import-from-excel:
+    post:
+      tags:
+      - users
+      summary: Import Users From Excel
+      parameters:
+      - name: file
+        in: formData
+        description: Excel File
+        required: true
+        type: file
+      security:
+      - Bearer: []
+      responses:
+        200:
+          description: 'OK'
+        400:
+          description: 'Bad Request'
         500:
           description: 'Server Error'
 

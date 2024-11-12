@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   FormGroup,
   FormControl,
@@ -26,9 +26,15 @@ import { ResetPasswordDialogComponent } from 'src/app/components/reset-password-
   ],
   templateUrl: './side-login.component.html',
 })
-export class AppSideLoginComponent {
+export class AppSideLoginComponent implements OnInit {
   constructor(private router: Router, private http: HttpClient
   ) { }
+
+  ngOnInit(): void {
+    if (localStorage.getItem('token') && localStorage.getItem('role')) {
+      this.router.navigate(['/dashboard']);
+    }
+  }
 
   readonly dialog = inject(MatDialog);
 

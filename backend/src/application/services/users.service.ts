@@ -48,9 +48,16 @@ export class UserService {
 
       const createdPerson = await manager.save(PersonEntity, newPerson);
 
-      const randomNum = Math.floor(Math.random() * 1000);
       const initials = `${data.firstName.charAt(0).toLowerCase()}${data.lastName.toLowerCase()}`;
-      const email = `${initials}${randomNum}@example.com`;
+      const existEmail = await manager.findOne(UserEntity, {
+        where: {
+          email: `${ initials }@example.com`,
+        },
+      });
+
+
+      const randomNum = Math.floor(Math.random() * 1000);
+      const email = existEmail ? `${initials}${randomNum}@example.com` : `${ initials }@example.com`;
 
       const newUser = {
         userName: data.userName,
@@ -211,8 +218,7 @@ export class UserService {
 
       return { message: 'Usuarios creados correctamente' };
     } catch (e) {
-      console.log(e.message);
-      throw new HttpException(400, 'Error al importar usuarios');
+      throw new HttpException(400, e.message);
     }
   }
 

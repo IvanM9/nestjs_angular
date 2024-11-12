@@ -1,0 +1,26 @@
+<mat-card class="cardWithShadow">
+  <mat-card-header class="p-t-24">
+    <h2 class="tw-text-2xl tw-font-bold tw-mb-4">Mi información</h2>
+  </mat-card-header>
+    <mat-card-content class="p-t-0">
+
+      <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-4">
+        <div>
+          <label class="tw-block tw-text-gray-700 tw-font-bold">Nombres:</label>
+          <p class="tw-text-gray-900">{{ data.firstName }}</p>
+        </div>
+        <div>
+          <label class="tw-block tw-text-gray-700 tw-font-bold">Apellidos:</label>
+          <p class="tw-text-gray-900">{{ data.lastName }}</p>
+        </div>
+        <div>
+          <label class="tw-block tw-text-gray-700 tw-font-bold">Email:</label>
+          <p class="tw-text-gray-900">{{ data.email }}</p>
+        </div>
+        <div>
+          <label class="tw-block tw-text-gray-700 tw-font-bold">Número de identificación:</label>
+          <p class="tw-text-gray-900">{{ data.identification }}</p>
+        </div>
+      </div>
+</mat-card-content>
+</mat-card>

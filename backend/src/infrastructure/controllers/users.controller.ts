@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Container } from 'typedi';
 import { UserService } from '@services/users.service';
 import { CreateUserDto } from '@dtos/users.dto';
+import { RequestWithUser } from '@/domain/interfaces/auth.interface';
 
 export class UserController {
   public user = Container.get(UserService);
@@ -79,9 +80,25 @@ export class UserController {
 
   importFromExcel = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
+
+      if (!req.file) {
+        throw new Error('No se ha subido ningún archivo');
+      }
+
       const importData = await this.user.importFromExcel(req.file);
 
       res.status(200).json({ data: importData, message: 'Usuarios importados' });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  myInformation = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const userId = req.session.userId;
+      const myInformationData = await this.user.getById(userId);
+
+      res.status(200).json({ data: myInformationData, message: 'Información encontrada' });
     } catch (error) {
       next(error);
     }

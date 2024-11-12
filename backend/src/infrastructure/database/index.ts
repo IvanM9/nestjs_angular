@@ -17,7 +17,7 @@ export const dbDataSource = new DataSource({
   port: Number(POSTGRES_PORT) || 5432,
   database: POSTGRES_DATABASE,
   synchronize: true,
-  logging: true,
+  logging: false,
   entities: [UserEntity, SessionEntity, RoleEntity, RoleUserEntity, RoleOptionsEntity, PersonEntity, OptionEntity],
   // migrations: [join(__dirname, '../**/*.migration{.ts,.js}')],
   // subscribers: [join(__dirname, '../**/*.subscriber{.ts,.js}')],
