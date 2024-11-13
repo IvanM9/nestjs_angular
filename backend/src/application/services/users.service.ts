@@ -154,6 +154,7 @@ export class UserService {
         where: {
           userId: user.id,
           firstDate: MoreThan(new Date(Date.now() - 1000 * 60 * 60)),
+          failed: true,
         },
       });
 

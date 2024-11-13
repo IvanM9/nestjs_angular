@@ -13,14 +13,14 @@ import { SessionsService } from './sessions.service';
 const createToken = (sessionId: number): TokenData => {
   const dataStoredInToken: DataStoredInToken = { id: sessionId };
   const secretKey: string = SECRET_KEY;
-  const expiresIn: number = 60 * 60 * 24;
+  // const expiresIn: number = 60 * 60 * 24;
 
-  return { expiresIn, token: sign(dataStoredInToken, secretKey, { expiresIn }) };
+  return { token: sign(dataStoredInToken, secretKey) };
 };
 
-const createCookie = (tokenData: TokenData): string => {
-  return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn};`;
-};
+// const createCookie = (tokenData: TokenData): string => {
+//   return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn};`;
+// };
 
 @Service()
 export class AuthService {
