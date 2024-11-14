@@ -15,7 +15,7 @@ export class UserController {
 
       const findAllUsersData = await this.user.getAllUsers(search, page, items);
 
-      res.status(200).json({ data: findAllUsersData, message: 'Usuarios encontrados' });
+      res.status(200).json(findAllUsersData);
     } catch (error) {
       next(error);
     }
@@ -26,7 +26,7 @@ export class UserController {
       const userId = Number(req.params.id);
       const findOneUserData = await this.user.getById(userId);
 
-      res.status(200).json({ data: findOneUserData, message: 'Usuario encontrado' });
+      res.status(200).json(findOneUserData);
     } catch (error) {
       next(error);
     }
@@ -37,7 +37,7 @@ export class UserController {
       const userData: CreateUserDto = req.body;
       const createUserData = await this.user.create(userData);
 
-      res.status(201).json({ data: createUserData, message: 'Creado' });
+      res.status(201).json(createUserData);
     } catch (error) {
       next(error);
     }
@@ -47,9 +47,9 @@ export class UserController {
     try {
       const userId = Number(req.params.id);
       const userData = req.body;
-      const updateUserData = await this.user.update(userId, userData);
+      await this.user.update(userId, userData);
 
-      res.status(200).json({ data: updateUserData, message: 'Actualizado' });
+      res.status(200).json({ message: 'Actualizado' });
     } catch (error) {
       next(error);
     }
@@ -59,9 +59,9 @@ export class UserController {
     try {
       const userId = Number(req.params.id);
       const status = req.params.status === 'true';
-      const deleteUserData = await this.user.updateStatus(userId, status);
+      await this.user.updateStatus(userId, status);
 
-      res.status(200).json({ data: deleteUserData, message: 'Estado modificado' });
+      res.status(200).json({ message: 'Estado modificado' });
     } catch (error) {
       next(error);
     }
@@ -87,7 +87,7 @@ export class UserController {
 
       const importData = await this.user.importFromExcel(req.file);
 
-      res.status(200).json({ data: importData, message: 'Usuarios importados' });
+      res.status(200).json(importData);
     } catch (error) {
       next(error);
     }

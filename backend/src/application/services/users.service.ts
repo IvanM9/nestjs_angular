@@ -36,7 +36,7 @@ export class UserService {
       });
 
       if (existUser) {
-        throw new HttpException(400, 'El usuario ya existe');
+        return { message: 'El usuario ya existe', error: true };
       }
 
       const newPerson = {
@@ -51,13 +51,13 @@ export class UserService {
       const initials = `${data.firstName.charAt(0).toLowerCase()}${data.lastName.toLowerCase()}`;
       const existEmail = await manager.findOne(UserEntity, {
         where: {
-          email: `${ initials }@example.com`,
+          email: `${initials}@example.com`,
         },
       });
 
 
       const randomNum = Math.floor(Math.random() * 1000);
-      const email = existEmail ? `${initials}${randomNum}@example.com` : `${ initials }@example.com`;
+      const email = existEmail ? `${initials}${randomNum}@example.com` : `${initials}@example.com`;
 
       const newUser = {
         userName: data.userName,
@@ -67,7 +67,7 @@ export class UserService {
       };
 
       const createdUser = await manager.save(UserEntity, newUser).catch(error => {
-        throw new HttpException(400, error.message);
+        throw new HttpException(500, error.message);
       });
 
       if (data.rolesId) {
@@ -76,7 +76,7 @@ export class UserService {
         }
       }
 
-      return createdUser;
+      return { data: createdUser, message: 'Creado' };
     });
   }
 
@@ -88,7 +88,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new HttpException(400, 'User not found');
+      throw new HttpException(404, 'Usuario no encontrado');
     }
 
     return await this.cnx
@@ -99,7 +99,7 @@ export class UserService {
         birthDate: data.birthDate,
       })
       .catch(() => {
-        throw new HttpException(400, 'Error updating person');
+        throw new HttpException(500, 'Error al actualizar el usuario');
       });
   }
 
@@ -111,7 +111,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new HttpException(400, 'User not found');
+      throw new HttpException(404, 'Usuario no encontrado');
     }
 
     return await this.cnx
@@ -119,7 +119,7 @@ export class UserService {
         status,
       })
       .catch(() => {
-        throw new HttpException(400, 'Error updating status');
+        throw new HttpException(500, 'Error al actualizar el estado');
       });
   }
 
@@ -130,18 +130,21 @@ export class UserService {
     });
 
     if (!existUser) {
-      throw new HttpException(400, 'User not found');
+      throw new HttpException(404, 'Usuario no encontrado');
     }
 
     return {
-      id: existUser.id,
-      userName: existUser.userName,
-      email: existUser.email,
-      firstName: existUser.person.firstName,
-      lastName: existUser.person.lastName,
-      identification: existUser.person.identification,
-      birthDate: existUser.person.birthDate,
-      status: existUser.status,
+      data: {
+        id: existUser.id,
+        userName: existUser.userName,
+        email: existUser.email,
+        firstName: existUser.person.firstName,
+        lastName: existUser.person.lastName,
+        identification: existUser.person.identification,
+        birthDate: existUser.person.birthDate,
+        status: existUser.status,
+      },
+      message: 'Usuario encontrado',
     };
   }
 
@@ -173,8 +176,11 @@ export class UserService {
     }
 
     return {
-      total: users.total,
-      users: allUsers,
+      data: {
+        total: users.total,
+        users: allUsers,
+      },
+      message: 'Usuarios encontrados',
     };
   }
 
