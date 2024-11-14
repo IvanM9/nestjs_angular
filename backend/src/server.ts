@@ -1,9 +1,9 @@
 import { App } from '@/app';
-import { AuthRoute } from '@/infrastructure/routes/auth.route';
-import { UserRoute } from '@/infrastructure/routes/users.route';
+import { AuthRoute } from '@routes/auth.route';
+import { UserRoute } from '@routes/users.route';
 import { ValidateEnv } from '@/shared/utils/validateEnv';
-import { RoleRoute } from './infrastructure/routes/roles.route';
-import { OptionRoute } from './infrastructure/routes/options.route';
+import { RoleRoute } from '@routes/roles.route';
+import { OptionRoute } from '@routes/options.route';
 
 ValidateEnv();
 

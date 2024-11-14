@@ -4,10 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MaterialModule } from 'src/app/material.module';
-import { HttpClient } from '@angular/common/http';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { UserDialogComponent } from '../user-dialog/user-dialog.component';
 import { UpdateUserDialogComponent } from '../update-user-dialog/update-user-dialog.component';
+import { UsersService } from 'src/app/services/users.service';
 
 @Component({
   selector: 'app-users-last-sessions',
@@ -19,7 +19,7 @@ import { UpdateUserDialogComponent } from '../update-user-dialog/update-user-dia
 export class UsersLastSessionsComponent implements OnInit {
   readonly dialog = inject(MatDialog);
 
-  constructor(private api: HttpClient) { }
+  constructor(private service: UsersService) { }
   async ngOnInit(): Promise<void> {
     await this.getUsers();
   }
@@ -42,10 +42,7 @@ export class UsersLastSessionsComponent implements OnInit {
   }
 
   async getUsers() {
-    this.api.get('http://localhost:3000/users/all', {
-      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
-      params: { search: this.searchValue, page: this.currentPage.toString(), items: this.pageSize.toString() }
-    }).subscribe((res: any) => {
+    this.service.getUsers(this.searchValue, this.currentPage, this.pageSize).subscribe((res: any) => {
       let index = 1;
       this.dataSource = res.data.users.map((user: any) => ({
         position: index++,
@@ -58,17 +55,16 @@ export class UsersLastSessionsComponent implements OnInit {
       }))
 
       this.totalPages = res.data.total;
-    });
+    })
+
   }
 
   deleteData(element: any) {
-    this.api.patch(`http://localhost:3000/users/update-status/${element.id}/false`, null, {
-      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-    }).subscribe(async (res: any) => {
+    this.service.updateStatus(element.id, false).subscribe(async () => {
       await this.getUsers()
     }, (error) => {
       alert('Error al eliminar el usuario');
-    });
+    })
   }
 
   editData(element: any) {
@@ -98,14 +94,12 @@ export class UsersLastSessionsComponent implements OnInit {
     const formData = new FormData();
     formData.append('file', file);
 
-    this.api.post('http://localhost:3000/users/import-from-excel', formData, {
-      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-    }).subscribe(async (res: any) => {
+    this.service.importExcel(formData).subscribe(async () => {
       await this.getUsers();
       alert('Archivo importado exitosamente');
     }, (error) => {
       alert('Error al importar el archivo');
-    });
+    })
   }
 
   triggerFileInputClick(): void {

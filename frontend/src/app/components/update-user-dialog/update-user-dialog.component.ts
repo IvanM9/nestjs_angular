@@ -7,6 +7,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogModule, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { UsersService } from 'src/app/services/users.service';
 
 @Component({
   selector: 'app-update-user-dialog',
@@ -30,18 +31,15 @@ import { MatInputModule } from '@angular/material/input';
   providers: [provideNativeDateAdapter()]
 })
 export class UpdateUserDialogComponent implements OnInit {
-  constructor(private api: HttpClient) { }
+  constructor(private api: HttpClient, private service: UsersService) { }
 
   readonly dialogRef = inject(MatDialogRef<UpdateUserDialogComponent>);
   readonly data = inject<{ userId: number }>(MAT_DIALOG_DATA);
   
   ngOnInit() {
-    this.api.get(`http://localhost:3000/users/by-id/${this.data.userId}`, {
-      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-    }).subscribe((res: any) => {
-      console.log(res);
+    this.service.getUserById(this.data.userId).subscribe((res:any)=>{
       this.form.patchValue(res.data);
-    });
+    })
   }
 
 
@@ -64,16 +62,11 @@ export class UpdateUserDialogComponent implements OnInit {
   }
 
   submit() {
-    this.api.put(`http://localhost:3000/users/update/${this.data.userId}`, this.form.value, {
-      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-    }).subscribe((res: any) => {
-      alert('Usuario actualizado con éxito');
+    this.service.updateUser(this.data.userId, this.form.value).subscribe(()=>{
+
       this.dialogRef.close();
     }, (err) => {
       alert(err.error.message);
-    });
+    })
   }
-
-
-
 }

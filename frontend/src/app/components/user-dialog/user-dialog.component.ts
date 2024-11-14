@@ -6,7 +6,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogModule, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { HttpClient } from '@angular/common/http';
+import { UsersService } from 'src/app/services/users.service';
 
 @Component({
   selector: 'app-user-dialog',
@@ -33,7 +33,7 @@ export class UserDialogComponent implements OnInit {
 
   readonly dialogRef = inject(MatDialogRef<UserDialogComponent>);
 
-  constructor(private api: HttpClient) { }
+  constructor(private service: UsersService) { }
 
   ngOnInit() {
   }
@@ -62,12 +62,11 @@ export class UserDialogComponent implements OnInit {
   }
 
   submit() {
-    this.api.post('http://localhost:3000/users/create', this.form.value, {
-      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-    }).subscribe((res: any) => {
+    this.service.createUser(this.form.value).subscribe((res: any)=>{
       alert('Usuario creado con éxito');
       this.dialogRef.close();
     }, (err) => {
+
       alert(err.error.message);
     });
   }

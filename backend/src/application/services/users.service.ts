@@ -149,7 +149,7 @@ export class UserService {
     const users = await this.userRepository.getAllUsers(this.cnx, search, page, items);
 
     const allUsers = [];
-    for (const user of users.users) {
+    for (const user of Array.isArray(users.users) ? users.users : []) {
       const numAttempts = await this.cnx.count(SessionEntity, {
         where: {
           userId: user.id,
@@ -193,14 +193,14 @@ export class UserService {
         const validated = validKeys.includes(key);
 
         if (!validated) {
-          throw new HttpException(400, `La columna ${key} no es válida. Debe ser una de las siguientes: ${validKeys.join(', ')}`);
+          return { message: `La columna ${key} no es válida. Debe ser una de las siguientes: ${validKeys.join(', ')}`, error: true };
         }
 
         return validated;
       });
 
       if (!isValid) {
-        throw new HttpException(400, 'El archivo no tiene la estructura correcta');
+        return { message: 'Archivo inválido', error: true };
       }
 
       for (const student of jsonData) {

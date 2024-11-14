@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MaterialModule } from 'src/app/material.module';
+import { UsersService } from 'src/app/services/users.service';
 
 @Component({
   selector: 'app-my-information',
@@ -23,16 +23,11 @@ export class MyInformationComponent implements OnInit {
     identification: '',
   }
 
-  constructor(private api: HttpClient) { }
+  constructor(private service: UsersService) { }
 
   ngOnInit() {
-    this.api.get('http://localhost:3000/users/my-information', {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    }).subscribe((res: any) => {
+    this.service.getMyInformation().subscribe((res:any)=>{
       this.data = res.data;
     })
   }
-
 }

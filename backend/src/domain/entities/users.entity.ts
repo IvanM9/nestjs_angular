@@ -1,4 +1,3 @@
-import { IsNotEmpty } from 'class-validator';
 import { PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, OneToMany, Entity } from 'typeorm';
 import { PersonEntity } from '@entities/person.entity';
 import { SessionEntity } from '@entities/session.entity';
@@ -13,11 +12,9 @@ export class UserEntity {
   userName: string;
 
   @Column({ unique: true })
-  @IsNotEmpty()
   email: string;
 
   @Column()
-  @IsNotEmpty()
   password: string;
 
   @Column()
@@ -37,8 +34,8 @@ export class UserEntity {
   @Column({ name: 'person_id' })
   personId: number;
 
-  @OneToOne(() => PersonEntity, person => person.user)
-  @JoinColumn({ name: 'person_id' })
+  @OneToOne(() => PersonEntity)
+  @JoinColumn({ name: 'person_id'})
   person: PersonEntity;
 
   @OneToMany(() => SessionEntity, session => session.user)

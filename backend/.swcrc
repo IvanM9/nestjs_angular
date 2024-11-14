@@ -21,17 +21,18 @@
     "baseUrl": "src",
     "paths": {
       "@/*": ["*"],
-      "@config": ["config"],
-      "@controllers/*": ["controllers/*"],
-      "@database": ["database"],
-      "@dtos/*": ["dtos/*"],
-      "@entities/*": ["entities/*"],
-      "@exceptions/*": ["exceptions/*"],
-      "@interfaces/*": ["interfaces/*"],
-      "@middlewares/*": ["middlewares/*"],
-      "@routes/*": ["routes/*"],
-      "@services/*": ["services/*"],
-      "@utils/*": ["utils/*"]
+      "@config": ["infrastructure/config"],
+      "@controllers/*": ["infrastructure/controllers/*"],
+      "@database": ["infrastructure/database"],
+      "@dtos/*": ["application/dtos/*"],
+      "@entities/*": ["domain/entities/*"],
+      "@exceptions/*": ["infrastructure/exceptions/*"],
+      "@interfaces/*": ["domain/interfaces/*"],
+      "@middlewares/*": ["infrastructure/middlewares/*"],
+      "@routes/*": ["infrastructure/routes/*"],
+      "@services/*": ["application/services/*"],
+      "@utils/*": ["shared/utils/*"],
+      "@repositories/*": ["infrastructure/repositories/*"]
     }
   },
   "module": {

@@ -14,8 +14,8 @@ import { Routes } from '@interfaces/routes.interface';
 import { ErrorMiddleware } from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
 import Container from 'typedi';
-import { UserService } from '@services/users.service';
 import { RolesService } from '@services/roles.service';
+import { UserService } from '@services/users.service';
 
 export class App {
   public app: express.Application;
